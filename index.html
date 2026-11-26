@@ -236,6 +236,17 @@
           <div class="flex flex-wrap items-center gap-2.5">
             <button
               type="button"
+              id="btn-sync-shared-db"
+              onclick="syncFromSharedDatabase(true)"
+              class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-xl shadow-xs transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Sync Google Sheets
+            </button>
+            <button
+              type="button"
               onclick="exportTicketsExcel()"
               class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-300 rounded-xl shadow-xs transition-colors"
             >
@@ -1755,7 +1766,7 @@
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex items-center justify-between">
-          <span>Demo Passcode: <code class="font-mono font-bold text-slate-900 bg-white px-1.5 py-0.5 rounded border border-slate-200">admin123</code></span>
+          <span>Demo Passcode: <code class="font-mono font-bold text-slate-900 bg-white px-1.5 py-0.5 rounded border border-slate-200">TCPdannad123</code></span>
           <button
             type="button"
             onclick="demoAdminLogin()"
@@ -1890,6 +1901,9 @@
   <!-- APPLICATION LOGIC                                                     -->
   <!-- ===================================================================== -->
   <script>
+    // 1. Paste your Google Apps Script Web App URL here:
+    const SHARED_DB_API_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+
     // Storage keys for persisting TATS tickets, Video Conference requests, Starlink requests, & admin session state
     const STORAGE_KEY = 'tats_tickets_v3';
     const VC_STORAGE_KEY = 'tats_vc_requests_v1';
@@ -1986,6 +2000,74 @@
     function hideToast() {
       const toast = document.getElementById('toastBanner');
       if (toast) toast.classList.add('hidden');
+    }
+
+    /**
+     * Multi-User Shared Database API Helpers (Google Sheets via Apps Script)
+     */
+    async function syncFromSharedDatabase(showFeedback = false) {
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+        if (showFeedback) {
+          showToast(
+            'API URL Not Configured',
+            'Replace YOUR_DEPLOYMENT_ID in SHARED_DB_API_URL with your Google Apps Script Web App URL.',
+            'warning'
+          );
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(SHARED_DB_API_URL);
+        const result = await response.json();
+        if (result.status === 'ok' && result.data) {
+          if (Array.isArray(result.data.tats)) {
+            const normalizedTats = result.data.tats.map((t) => ({
+              ...t,
+              attachment: t.attachmentName && t.attachmentName !== 'None'
+                ? { name: t.attachmentName, type: 'file', sizeLabel: 'Cloud', dataUrl: '' }
+                : (t.attachment || null)
+            }));
+            saveTickets(normalizedTats);
+          }
+          if (Array.isArray(result.data.vc)) saveVcRequests(result.data.vc);
+          if (Array.isArray(result.data.starlink)) saveStarlinkRequests(result.data.starlink);
+
+          updateTicketCountBadge();
+          updateNextVcSeriesNumber();
+          updateNextStarlinkSeriesBadge();
+
+          if (currentRole === 'admin') {
+            renderDashboard();
+            renderTickets();
+            renderVcRequestsList();
+            renderStarlinkRequestsList();
+          }
+
+          if (showFeedback) {
+            showToast('Database Synced', 'All records updated from the shared Google Sheet.', 'success');
+          }
+        }
+      } catch (err) {
+        console.warn('Shared DB sync skipped (using local cache):', err);
+        if (showFeedback) {
+          showToast('Sync Warning', 'Could not reach Google Sheets API. Using local cache.', 'warning');
+        }
+      }
+    }
+
+    async function pushToSharedDatabase(action, sheetName, record) {
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) return;
+      try {
+        await fetch(SHARED_DB_API_URL, {
+          method: 'POST',
+          mode: 'no-cors', // Avoids browser CORS preflight blocks on Apps Script
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action, sheetName, record })
+        });
+      } catch (err) {
+        console.error('Failed to sync to Google Sheets:', err);
+      }
     }
 
     /**
@@ -2372,7 +2454,7 @@
       if (event) event.preventDefault();
       const input = document.getElementById('adminPasscodeInput');
       const err = document.getElementById('err-adminPasscode');
-      const val = (input ? input.value : '').trim().toLowerCase();
+      const val = (input ? input.value : '').trim();
 
       if (val === ADMIN_PASSCODE) {
         if (err) err.classList.add('hidden');
@@ -2556,6 +2638,8 @@
       vcList.unshift(newVc);
       saveVcRequests(vcList);
 
+      pushToSharedDatabase('create', 'Video Conference', newVc);
+
       document.getElementById('modalRefNumber').textContent = vcId;
       document.getElementById('modalSummaryDetails').innerHTML = `
         <div class="flex justify-between gap-2"><span class="text-slate-500">Series Number:</span><span class="font-mono font-semibold text-blue-700 text-right">#${assignedSeries}</span></div>
@@ -2688,6 +2772,8 @@
       const slList = getStarlinkRequests();
       slList.unshift(newSlRequest);
       saveStarlinkRequests(slList);
+
+      pushToSharedDatabase('create', 'Starlink Borrower', newSlRequest);
 
       document.getElementById('modalRefNumber').textContent = slId;
       document.getElementById('modalSummaryDetails').innerHTML = `
@@ -2884,6 +2970,11 @@
       tickets.unshift(newTicket);
       saveTickets(tickets);
 
+      pushToSharedDatabase('create', 'TATS Tickets', {
+        ...newTicket,
+        attachmentName: newTicket.attachment ? newTicket.attachment.name : 'None'
+      });
+
       document.getElementById('modalRefNumber').textContent = ticketId;
       document.getElementById('modalSummaryDetails').innerHTML = `
         <div class="flex justify-between gap-2"><span class="text-slate-500">Submitted By:</span><span class="font-semibold text-slate-900 text-right">${escapeHTML(newTicket.fullName)}</span></div>
@@ -2950,6 +3041,10 @@
 
       tickets[idx].solved = tickets[idx].solved === 'YES' ? 'No' : 'YES';
       saveTickets(tickets);
+      pushToSharedDatabase('updateStatus', 'TATS Tickets', {
+        id: ticketId,
+        solved: tickets[idx].solved
+      });
       renderTickets();
       if (!document.getElementById('view-dashboard')?.classList.contains('hidden')) {
         renderDashboard();
@@ -2974,6 +3069,11 @@
       }
 
       saveVcRequests(vcList);
+      pushToSharedDatabase('updateStatus', 'Video Conference', {
+        id: vcId,
+        status: vcList[idx].status,
+        webexLink: vcList[idx].webexLink
+      });
       renderVcRequestsList();
       if (!document.getElementById('view-dashboard')?.classList.contains('hidden')) {
         renderDashboard();
@@ -2996,6 +3096,10 @@
       }
 
       saveStarlinkRequests(slList);
+      pushToSharedDatabase('updateStatus', 'Starlink Borrower', {
+        id: slId,
+        status: slList[idx].status
+      });
       renderStarlinkRequestsList();
       if (!document.getElementById('view-dashboard')?.classList.contains('hidden')) {
         renderDashboard();
@@ -3799,6 +3903,7 @@
      */
     function initTatsPortal() {
       initTicketsStorage();
+      syncFromSharedDatabase(false);
       updateTicketCountBadge();
       updateNextVcSeriesNumber();
       updateNextStarlinkSeriesBadge();
@@ -3917,6 +4022,8 @@
     window.closeImageModal = closeImageModal;
     window.exportTicketsExcel = exportTicketsExcel;
     window.hideToast = hideToast;
+    window.syncFromSharedDatabase = syncFromSharedDatabase;
+    window.pushToSharedDatabase = pushToSharedDatabase;
   </script>
 </body>
 </html>
