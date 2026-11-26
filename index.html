@@ -1902,7 +1902,7 @@
   <!-- ===================================================================== -->
   <script>
     // 1. Paste your Google Apps Script Web App URL here:
-    const SHARED_DB_API_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+    const SHARED_DB_API_URL = 'https://script.google.com/macros/s/AKfycbw9XAcNgiGHeG-6v5U-R7eviHvv0oxHs6VF_mW3Q3NvlnC_zf6HLKm_C681xEm-Xg-5KQ/exec';
 
     // Storage keys for persisting TATS tickets, Video Conference requests, Starlink requests, & admin session state
     const STORAGE_KEY = 'tats_tickets_v3';
@@ -2006,7 +2006,7 @@
      * Multi-User Shared Database API Helpers (Google Sheets via Apps Script)
      */
     async function syncFromSharedDatabase(showFeedback = false) {
-      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('AKfycbw9XAcNgiGHeG-6v5U-R7eviHvv0oxHs6VF_mW3Q3NvlnC_zf6HLKm_C681xEm-Xg-5KQ')) {
         if (showFeedback) {
           showToast(
             'API URL Not Configured',
