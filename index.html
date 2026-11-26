@@ -2006,7 +2006,7 @@
      * Multi-User Shared Database API Helpers (Google Sheets via Apps Script)
      */
     async function syncFromSharedDatabase(showFeedback = false) {
-      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('https://script.google.com/macros/s/AKfycbw9XAcNgiGHeG-6v5U-R7eviHvv0oxHs6VF_mW3Q3NvlnC_zf6HLKm_C681xEm-Xg-5KQ/exec')) {
         if (showFeedback) {
           showToast(
             'API URL Not Configured',
@@ -2057,7 +2057,7 @@
     }
 
     async function pushToSharedDatabase(action, sheetName, record) {
-      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) return;
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('https://script.google.com/macros/s/AKfycbw9XAcNgiGHeG-6v5U-R7eviHvv0oxHs6VF_mW3Q3NvlnC_zf6HLKm_C681xEm-Xg-5KQ/exec')) return;
       try {
         await fetch(SHARED_DB_API_URL, {
           method: 'POST',
