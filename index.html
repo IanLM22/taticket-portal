@@ -351,7 +351,7 @@
             </div>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span class="text-slate-500">Webex &amp; Starlink Bookings</span>
+            <span class="text-slate-500">Meeting &amp; Starlink Bookings</span>
             <div class="flex items-center gap-2.5">
               <button type="button" onclick="openAdminVcRecords()" class="font-semibold text-teal-700 hover:underline">VC &rarr;</button>
               <button type="button" onclick="openAdminStarlinkRecords()" class="font-semibold text-indigo-700 hover:underline">Starlink (<span id="dash-kpi-sl-total">0</span>) &rarr;</button>
@@ -744,13 +744,13 @@
         <div class="h-2.5 bg-gradient-to-r from-blue-600 via-sky-500 to-slate-800"></div>
         <div class="p-6 sm:p-8 border-b border-slate-100">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h2 class="text-2xl font-bold text-slate-900">Video Conference (Webex) Request Form</h2>
+            <h2 class="text-2xl font-bold text-slate-900">Video Conference (Meeting) Request Form</h2>
             <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
               * Indicates required question
             </span>
           </div>
           <p class="text-sm text-slate-500">
-            Reserve an official DOH Webex virtual meeting room. Your unique Series Number is assigned upon submission.
+            Reserve an official DOH Meeting virtual meeting room. Your unique Series Number is assigned upon submission.
           </p>
         </div>
 
@@ -901,10 +901,10 @@
             <p id="err-vcParticipants" class="hidden text-xs font-medium text-rose-600 mt-1.5">Participants info is required.</p>
           </div>
 
-          <!-- Webex Lobby & Recording Options -->
+          <!-- Meeting Lobby & Recording Options -->
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
             <div>
-              <span class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Webex Lobby / Unlocking Behavior</span>
+              <span class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Meeting Lobby / Unlocking Behavior</span>
               <div class="space-y-2 text-xs">
                 <label class="flex items-center gap-2.5 cursor-pointer">
                   <input type="radio" name="vcUnlocking" value="Guests wait in the lobby until the host admits them" checked onchange="vcUnlockingOption = this.value" class="text-blue-600" />
@@ -925,7 +925,7 @@
                   onchange="toggleVcRecordingField(this.checked)"
                   class="h-4 w-4 rounded text-blue-600"
                 />
-                <span>Request Cloud Recording of the Webex Session</span>
+                <span>Request Cloud Recording of the Meeting Session</span>
               </label>
               <div id="vcRecordingEmailWrapper" class="hidden mt-2.5">
                 <input
@@ -1387,7 +1387,7 @@
             </svg>
           </div>
           <p class="text-xs text-slate-500">
-            Enter your reference number or email address above to inspect live approval status and Webex meeting links.
+            Enter your reference number or email address above to inspect live approval status and Meeting meeting links.
           </p>
         </div>
       </div>
@@ -1597,7 +1597,7 @@
           </svg>
         </button>
       </div>
-      <p class="text-xs text-slate-500 mt-1">Enter the administrator passcode to manage tickets, approve Webex links, and export analytics.</p>
+      <p class="text-xs text-slate-500 mt-1">Enter the administrator passcode to manage tickets, approve Meeting links, and export analytics.</p>
 
       <form onsubmit="handleAdminLoginSubmit(event)" class="mt-4 space-y-4">
         <div>
@@ -1675,7 +1675,7 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- ADMIN APPROVE VIDEO CONFERENCE MODAL (PASTE WEBEX LINK)               -->
+  <!-- ADMIN APPROVE VIDEO CONFERENCE MODAL (PASTE Meeting LINK)               -->
   <!-- ===================================================================== -->
   <div id="vcApproveModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 animate-fade-up">
@@ -1688,7 +1688,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-slate-900">Approve Video Conference Request</h3>
-            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the Webex meeting details &amp; invitation before approving</p>
+            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the Meeting meeting details &amp; invitation before approving</p>
           </div>
         </div>
         <button type="button" onclick="closeVcApproveModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
@@ -1703,18 +1703,18 @@
       <form id="vcApproveForm" onsubmit="confirmVcApprovalWithLink(event)" novalidate class="mt-4 space-y-4">
         <input type="hidden" id="vcApproveTargetId" value="" />
         <div>
-          <label for="vcApproveWebexLinkInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
-            Webex Meeting Details / Invitation <span class="text-rose-600">*</span>
+          <label for="vcApproveMeetingLinkInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            Meeting Meeting Details / Invitation <span class="text-rose-600">*</span>
           </label>
           <textarea
-            id="vcApproveWebexLinkInput"
+            id="vcApproveMeetingLinkInput"
             rows="6"
             required
-            placeholder="Paste complete Webex meeting invitation details here (Meeting link, Meeting number, Password, Host key, etc.)..."
+            placeholder="Paste complete Meeting meeting invitation details here (Meeting link, Meeting number, Password, Host key, etc.)..."
             class="w-full rounded-xl border border-slate-300 px-4 py-3 text-xs font-mono text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           ></textarea>
-          <p id="err-vcApproveWebexLink" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-            Please paste the Webex meeting details before approving.
+          <p id="err-vcApproveMeetingLink" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+            Please paste the Meeting meeting details before approving.
           </p>
         </div>
 
@@ -2726,7 +2726,7 @@
           unlockingOption: vcUnlockingOption,
           remarks,
           status: 'Pending',
-          webexLink: 'Awaiting Admin Webex Link'
+          MeetingLink: 'Awaiting Admin Meeting Link'
         };
 
         const vcList = getVcRequests();
@@ -2988,12 +2988,12 @@
         <p><span class="font-semibold">Schedule:</span> ${escapeHTML(vc.dateOfMeeting)} at ${escapeHTML(vc.timeOfMeeting)} (${escapeHTML(vc.lengthHours)} hr/s)</p>
         <p><span class="font-semibold">Division / Office:</span> ${escapeHTML(vc.divisionOffice)} (${escapeHTML(vc.officeEmail)})</p>
       `;
-      const linkInput = document.getElementById('vcApproveWebexLinkInput');
-      const existingDetails = vc.webexLink && vc.webexLink !== 'Awaiting Admin Webex Link' && vc.webexLink !== 'Awaiting Admin Meeting Details'
-        ? vc.webexLink
+      const linkInput = document.getElementById('vcApproveMeetingLinkInput');
+      const existingDetails = vc.MeetingLink && vc.MeetingLink !== 'Awaiting Admin Meeting Link' && vc.MeetingLink !== 'Awaiting Admin Meeting Details'
+        ? vc.MeetingLink
         : '';
       linkInput.value = existingDetails;
-      document.getElementById('err-vcApproveWebexLink').classList.add('hidden');
+      document.getElementById('err-vcApproveMeetingLink').classList.add('hidden');
       document.getElementById('vcApproveModal').classList.remove('hidden');
     }
 
@@ -3005,8 +3005,8 @@
     function confirmVcApprovalWithLink(event) {
       event.preventDefault();
       const targetId = document.getElementById('vcApproveTargetId').value;
-      const detailsVal = document.getElementById('vcApproveWebexLinkInput').value.trim();
-      const errEl = document.getElementById('err-vcApproveWebexLink');
+      const detailsVal = document.getElementById('vcApproveMeetingLinkInput').value.trim();
+      const errEl = document.getElementById('err-vcApproveMeetingLink');
 
       if (!detailsVal) {
         if (errEl) errEl.classList.remove('hidden');
@@ -3018,27 +3018,27 @@
       const idx = vcList.findIndex((v) => v.id === targetId);
       if (idx === -1) return;
 
-      vcList[idx].webexLink = detailsVal;
+      vcList[idx].MeetingLink = detailsVal;
       vcList[idx].status = 'Scheduled / Approved';
       saveVcRequests(vcList);
 
       pushToSharedDatabase('updateStatus', 'Video Conference', {
         id: targetId,
         status: vcList[idx].status,
-        webexLink: vcList[idx].webexLink
+        MeetingLink: vcList[idx].MeetingLink
       });
 
       closeVcApproveModal();
       renderVcRequestsList();
       renderDashboard();
-      showToast('Video Conference Approved', `Saved Webex meeting details for ${targetId}.`, 'success');
+      showToast('Video Conference Approved', `Saved Meeting meeting details for ${targetId}.`, 'success');
     }
 
     function copyVcMeetingDetails(vcId) {
       const vc = getVcRequests().find((v) => v.id === vcId);
-      if (!vc || !vc.webexLink) return;
+      if (!vc || !vc.MeetingLink) return;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(vc.webexLink).then(() => {
+        navigator.clipboard.writeText(vc.MeetingLink).then(() => {
           showToast('Copied to Clipboard', `Meeting details for ${vc.id} copied.`, 'success');
         }).catch(() => {
           showToast('Copy Failed', 'Please select and copy the meeting details manually.', 'warning');
@@ -3062,14 +3062,14 @@
         vcList[idx].status = 'Completed';
       } else {
         vcList[idx].status = 'Pending';
-        vcList[idx].webexLink = 'Awaiting Admin Meeting Details';
+        vcList[idx].MeetingLink = 'Awaiting Admin Meeting Details';
       }
       saveVcRequests(vcList);
 
       pushToSharedDatabase('updateStatus', 'Video Conference', {
         id: vcId,
         status: vcList[idx].status,
-        webexLink: vcList[idx].webexLink
+        MeetingLink: vcList[idx].MeetingLink
       });
 
       renderVcRequestsList();
@@ -3172,9 +3172,9 @@
       });
 
       matchedVc.forEach((v) => {
-        const hasDetails = v.webexLink &&
-          v.webexLink !== 'Awaiting Admin Webex Link' &&
-          v.webexLink !== 'Awaiting Admin Meeting Details';
+        const hasDetails = v.MeetingLink &&
+          v.MeetingLink !== 'Awaiting Admin Meeting Link' &&
+          v.MeetingLink !== 'Awaiting Admin Meeting Details';
         cards.push(`
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3187,7 +3187,7 @@
             <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
             <div class="mt-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
               <div class="flex items-center justify-between gap-2 mb-1.5">
-                <span class="font-semibold text-slate-800">Webex Meeting Details:</span>
+                <span class="font-semibold text-slate-800">Meeting Meeting Details:</span>
                 ${hasDetails ? `
                   <button
                     type="button"
@@ -3199,8 +3199,8 @@
                 ` : ''}
               </div>
               ${hasDetails
-                ? `<div class="mt-1 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(v.webexLink)}</div>`
-                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Meeting Details')}</span>`
+                ? `<div class="mt-1 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(v.MeetingLink)}</div>`
+                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.MeetingLink || 'Awaiting Admin Meeting Details')}</span>`
               }
             </div>
           </div>
@@ -3429,9 +3429,9 @@
       container.innerHTML = filtered.map((item) => {
         const isPending = item.status === 'Pending';
         const isApproved = item.status === 'Scheduled / Approved';
-        const hasDetails = item.webexLink &&
-          item.webexLink !== 'Awaiting Admin Webex Link' &&
-          item.webexLink !== 'Awaiting Admin Meeting Details';
+        const hasDetails = item.MeetingLink &&
+          item.MeetingLink !== 'Awaiting Admin Meeting Link' &&
+          item.MeetingLink !== 'Awaiting Admin Meeting Details';
         const statusBadge = isPending
           ? 'bg-amber-100 text-amber-800 border-amber-200'
           : (isApproved ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-emerald-100 text-emerald-800 border-emerald-200');
@@ -3484,7 +3484,7 @@
             <div class="mt-3.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-2">
               <div>
                 <div class="flex items-center justify-between gap-2">
-                  <span class="font-semibold text-slate-800">Webex Meeting Details:</span>
+                  <span class="font-semibold text-slate-800">Meeting Meeting Details:</span>
                   ${hasDetails ? `
                     <button
                       type="button"
@@ -3496,8 +3496,8 @@
                   ` : ''}
                 </div>
                 ${hasDetails
-                  ? `<div class="mt-1.5 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(item.webexLink)}</div>`
-                  : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(item.webexLink || 'Awaiting Admin Meeting Details')}</span>`
+                  ? `<div class="mt-1.5 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(item.MeetingLink)}</div>`
+                  : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(item.MeetingLink || 'Awaiting Admin Meeting Details')}</span>`
                 }
               </div>
               <p><span class="font-semibold text-slate-800">Recording:</span> ${escapeHTML(item.recordingSendTo || 'Not Requested')} &bull; <span class="font-semibold text-slate-800">Unlocking:</span> ${escapeHTML(item.unlockingOption || 'Standard')}</p>
@@ -3854,7 +3854,7 @@
         'Office Email': v.officeEmail,
         'Division / Unit': v.divisionOffice,
         'Status': v.status,
-        'Webex Link': v.webexLink
+        'Meeting Link': v.MeetingLink
       }));
       const slRows = getStarlinkRequests().map((s) => ({
         'Reference ID': s.id,
