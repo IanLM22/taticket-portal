@@ -516,20 +516,499 @@
             </p>
 
             <div class="mt-4 pt-3 border-t border-slate-200">
-        <form id="vcRequestForm" onsubmit="handleVcRequestSubmit(event)" novalidate class="p-6 space-y-5">
-          <!-- Row 1: Series Number Notice -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-slate-100/90 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="block text-[11px] font-medium text-slate-500">Series Number</span>
-                  <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
-                    Auto-Generated on Submit
-                  </span>
-                </div>
-                <span class="block text-sm font-semibold text-slate-700 mt-0.5">Assigned automatically upon submission</span>
+              <label class="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  id="privacyConsent"
+                  required
+                  class="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+                />
+                <span class="text-xs sm:text-sm font-semibold text-slate-800">
+                  I have read and agree to the Data Privacy Act of 2012 Notice and certify that all information provided is true and correct. <span class="text-rose-600">*</span>
+                </span>
+              </label>
+              <p id="err-privacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                You must agree to the Data Privacy Act of 2012 Notice before submitting.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TATS 8-Question Form -->
+      <form id="tatsForm" onsubmit="handleTatsFormSubmit(event)" novalidate class="space-y-5">
+
+        <!-- 1. Email * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="email" class="block text-base font-semibold text-slate-900">
+            1. Email <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Active email address for ticket confirmation and updates.</p>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="your.email@doh.gov.ph"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-email" class="hidden text-xs font-medium text-rose-600 mt-2">Please enter a valid email address.</p>
+        </div>
+
+        <!-- 2. Full Name * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="fullName" class="block text-base font-semibold text-slate-900">
+            2. Full Name (First Name, Middle Initial, Last Name) <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Complete name of the reporting personnel.</p>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            required
+            placeholder="e.g., Juan A. Dela Cruz"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-fullName" class="hidden text-xs font-medium text-rose-600 mt-2">Full Name is required.</p>
+        </div>
+
+        <!-- 3. Province / Facility * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="provinceFacility" class="block text-base font-semibold text-slate-900">
+            3. Province / Name of Health Facility <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Specify Province and Hospital / RHU / Health Center name.</p>
+          <input
+            type="text"
+            id="provinceFacility"
+            name="provinceFacility"
+            required
+            placeholder="e.g., Batangas - Lipa City District Hospital"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-provinceFacility" class="hidden text-xs font-medium text-rose-600 mt-2">Province / Health Facility is required.</p>
+        </div>
+
+        <!-- 4. Concerned Information System * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <label class="block text-base font-semibold text-slate-900">
+            4. Concerned Information System <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Select the DOH Health Information System experiencing the issue.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/40 cursor-pointer transition-colors">
+              <input type="radio" name="infoSystem" value="iHOMIS, HBSYS, IHOMIS+" checked class="h-4 w-4 text-teal-600 focus:ring-teal-500" />
+              <span class="text-sm font-medium text-slate-800">iHOMIS, HBSYS, IHOMIS+</span>
+            </label>
+            <label class="flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 hover:border-teal-500 hover:bg-teal-50/40 cursor-pointer transition-colors">
+              <input type="radio" name="infoSystem" value="iClinicSys" class="h-4 w-4 text-teal-600 focus:ring-teal-500" />
+              <span class="text-sm font-medium text-slate-800">iClinicSys</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Error / Problem Encountered * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="errorDescription" class="block text-base font-semibold text-slate-900">
+            5. Detailed Description of Error / Problem Encountered <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Describe the exact error message, affected module, and steps to reproduce.</p>
+          <textarea
+            id="errorDescription"
+            name="errorDescription"
+            rows="4"
+            required
+            placeholder="Describe the system error or technical assistance needed..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          ></textarea>
+          <p id="err-errorDescription" class="hidden text-xs font-medium text-rose-600 mt-2">Please provide a description of the error encountered.</p>
+        </div>
+
+        <!-- 6. Screenshot / Attachment * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <label class="block text-base font-semibold text-slate-900">
+            6. Upload Screenshot of Error / Supporting Document <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Drag &amp; drop or click to upload an image (JPG, PNG) or PDF (max 10MB).</p>
+
+          <div
+            id="dropZone"
+            class="border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-slate-50/70"
+          >
+            <input type="file" id="screenshotInput" accept="image/*,.pdf" class="hidden" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9 text-teal-600 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <p class="text-sm font-semibold text-slate-800">Click to select file or drag and drop here</p>
+            <p class="text-xs text-slate-400 mt-1">Supports PNG, JPG, JPEG, or PDF</p>
+          </div>
+
+          <!-- Attachment Preview Card -->
+          <div id="filePreviewCard" class="hidden mt-4 bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <img id="previewImage" src="" alt="Preview" class="w-12 h-12 rounded-lg object-cover border border-slate-200 shrink-0" />
+              <div id="previewPdfIcon" class="hidden w-12 h-12 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs shrink-0">
+                PDF
               </div>
-              <span class="text-xs font-mono text-slate-400">Unique ID</span>
+              <div class="min-w-0">
+                <p id="previewFileName" class="text-xs font-bold text-slate-800 truncate">screenshot.png</p>
+                <p id="previewFileMeta" class="text-[11px] text-slate-500">Compressed Image</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onclick="clearTatsAttachment()"
+              class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200 transition-colors shrink-0"
+            >
+              Remove
+            </button>
+          </div>
+          <p id="err-screenshot" class="hidden text-xs font-medium text-rose-600 mt-2">Please attach a screenshot or PDF of the issue.</p>
+        </div>
+
+        <!-- 7. AnyDesk Address -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <div class="flex items-center justify-between">
+            <label for="anydeskAddress" class="block text-base font-semibold text-slate-900">
+              7. AnyDesk Address / Remote ID
+            </label>
+            <span class="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Optional</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Provide your 9- or 10-digit AnyDesk ID if remote troubleshooting is needed.</p>
+          <input
+            type="text"
+            id="anydeskAddress"
+            name="anydeskAddress"
+            placeholder="e.g., 123 456 789"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-mono text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+        </div>
+
+        <!-- 8. Was the issue solved during initial troubleshooting? * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <label class="block text-base font-semibold text-slate-900">
+            8. Was the issue resolved during initial troubleshooting? <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Select "No" if you still require Technical Assistance intervention.</p>
+          <div class="flex flex-wrap gap-4">
+            <label class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <input
+                type="checkbox"
+                id="solvedNo"
+                checked
+                onchange="handleSolvedCheckbox('No')"
+                class="h-4 w-4 rounded text-amber-600 focus:ring-amber-500"
+              />
+              <span class="text-sm font-semibold text-slate-800">No (Needs TA Support)</span>
+            </label>
+            <label class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <input
+                type="checkbox"
+                id="solvedYes"
+                onchange="handleSolvedCheckbox('YES')"
+                class="h-4 w-4 rounded text-emerald-600 focus:ring-emerald-500"
+              />
+              <span class="text-sm font-semibold text-slate-800">YES (Resolved / For Documentation)</span>
+            </label>
+          </div>
+          <p id="err-solved" class="hidden text-xs font-medium text-rose-600 mt-2">Please select either YES or No.</p>
+        </div>
+
+        <!-- Form Action Buttons -->
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-2 pb-6">
+          <button
+            type="button"
+            onclick="resetTatsForm()"
+            class="w-full sm:w-auto px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 rounded-xl transition-colors"
+          >
+            Clear Form
+          </button>
+          <button
+            type="submit"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            Submit TATS Ticket
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: VIDEO CONFERENCE REQUEST FORM (CLIENT & ADMIN)                -->
+    <!-- ===================================================================== -->
+    <section id="view-vc-request" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2.5 bg-gradient-to-r from-blue-600 via-sky-500 to-slate-800"></div>
+        <div class="p-6 sm:p-8 border-b border-slate-100">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <h2 class="text-2xl font-bold text-slate-900">Video Conference (Webex) Request Form</h2>
+            <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+              * Indicates required question
+            </span>
+          </div>
+          <p class="text-sm text-slate-500">
+            Reserve an official DOH Webex virtual meeting room. Your unique Series Number is assigned upon submission.
+          </p>
+        </div>
+
+        <form id="vcRequestForm" onsubmit="handleVcRequestSubmit(event)" novalidate class="p-6 sm:p-8 space-y-5">
+          <!-- Series Number Notice -->
+          <div class="bg-slate-100/90 border border-slate-200 rounded-xl px-4 py-3 flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="block text-[11px] font-medium text-slate-500">Series Number</span>
+                <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
+                  Auto-Generated on Submit
+                </span>
+              </div>
+              <span class="block text-sm font-semibold text-slate-700 mt-0.5">Assigned automatically upon submission</span>
+            </div>
+            <span class="text-xs font-mono text-slate-400">Unique ID</span>
+          </div>
+
+          <!-- Title of Meeting -->
+          <div>
+            <label for="vcTitle" class="block text-sm font-semibold text-slate-900 mb-1.5">
+              Title of Meeting / Activity <span class="text-rose-600">*</span>
+            </label>
+            <input
+              type="text"
+              id="vcTitle"
+              required
+              placeholder="e.g., Regional Health Information Systems Consultative Meeting"
+              class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
+            <p id="err-vcTitle" class="hidden text-xs font-medium text-rose-600 mt-1.5">Meeting title is required.</p>
+          </div>
+
+          <!-- Date, Time & Length -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label for="vcDate" class="block text-sm font-semibold text-slate-900 mb-1.5">
+                Date of Meeting <span class="text-rose-600">*</span>
+              </label>
+              <input
+                type="date"
+                id="vcDate"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+              />
+              <p id="err-vcDate" class="hidden text-xs font-medium text-rose-600 mt-1.5">Date is required.</p>
+            </div>
+            <div>
+              <label for="vcTime" class="block text-sm font-semibold text-slate-900 mb-1.5">
+                Start Time <span class="text-rose-600">*</span>
+              </label>
+              <input
+                type="time"
+                id="vcTime"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+              />
+              <p id="err-vcTime" class="hidden text-xs font-medium text-rose-600 mt-1.5">Start time is required.</p>
+            </div>
+            <div>
+              <label for="vcLength" class="block text-sm font-semibold text-slate-900 mb-1.5">
+                Duration (Hours) <span class="text-rose-600">*</span>
+              </label>
+              <input
+                type="number"
+                id="vcLength"
+                min="0.5"
+                max="24"
+                step="0.5"
+                value="2"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+              />
+              <p id="err-vcLength" class="hidden text-xs font-medium text-rose-600 mt-1.5">Enter valid hours.</p>
+            </div>
+          </div>
+
+          <!-- Division / Program / Unit -->
+          <div>
+            <label for="vcDivision" class="block text-sm font-semibold text-slate-900 mb-1.5">
+              Division / Program / Unit <span class="text-rose-600">*</span>
+            </label>
+            <select
+              id="vcDivision"
+              required
+              class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 bg-white focus:border-blue-600 focus:outline-none"
+            >
+              <option value="">Choose Division / Program / Unit...</option>
+              <option value="Management Support Division (MSD)">Management Support Division (MSD)</option>
+              <option value="Local Health Support Division (LHSD)">Local Health Support Division (LHSD)</option>
+              <option value="Regulation, Licensing and Enforcement Division (RLED)">Regulation, Licensing and Enforcement Division (RLED)</option>
+              <option value="Information and Communications Technology Unit (ICTU)">Information and Communications Technology Unit (ICTU)</option>
+              <option value="Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU">Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU</option>
+              <option value="Universal Health Care (UHC)">Universal Health Care (UHC)</option>
+              <option value="Health Emergency Management Services (HEMS)">Health Emergency Management Services (HEMS)</option>
+              <option value="Health Education and Promotion Unit (HEPU)">Health Education and Promotion Unit (HEPU)</option>
+              <option value="Family Health Care (FHC)">Family Health Care (FHC)</option>
+              <option value="Infectious Diseases Cluster (IDC)">Infectious Diseases Cluster (IDC)</option>
+              <option value="Integrated Non-Communicable Disease Program Cluster (INCDPC)">Integrated Non-Communicable Disease Program Cluster (INCDPC)</option>
+              <option value="Human Resources for Health (HRH)">Human Resources for Health (HRH)</option>
+              <option value="Provincial DOH Office (PDOHO)">Provincial DOH Office (PDOHO)</option>
+            </select>
+            <p id="err-vcDivision" class="hidden text-xs font-medium text-rose-600 mt-1.5">Please select your Division / Unit.</p>
+          </div>
+
+          <!-- Host & Co-Host and Office Email -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="vcHostCoHost" class="block text-sm font-semibold text-slate-900 mb-1.5">
+                Host and Co-Host Name(s) <span class="text-rose-600">*</span>
+              </label>
+              <input
+                type="text"
+                id="vcHostCoHost"
+                required
+                placeholder="e.g., Juan Dela Cruz / Maria Santos"
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+              />
+              <p id="err-vcHostCoHost" class="hidden text-xs font-medium text-rose-600 mt-1.5">Host / Co-Host is required.</p>
+            </div>
+            <div>
+              <label for="vcOfficeEmail" class="block text-sm font-semibold text-slate-900 mb-1.5">
+                Office Email Address <span class="text-rose-600">*</span>
+              </label>
+              <input
+                type="email"
+                id="vcOfficeEmail"
+                required
+                placeholder="unit.email@doh.gov.ph"
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+              />
+              <p id="err-vcOfficeEmail" class="hidden text-xs font-medium text-rose-600 mt-1.5">Valid email address is required.</p>
+            </div>
+          </div>
+
+          <!-- Expected Participants -->
+          <div>
+            <label for="vcParticipants" class="block text-sm font-semibold text-slate-900 mb-1.5">
+              Target Participants &amp; Estimated Count <span class="text-rose-600">*</span>
+            </label>
+            <input
+              type="text"
+              id="vcParticipants"
+              required
+              placeholder="e.g., Provincial IT Officers &amp; Hospital Chiefs (~85 participants)"
+              class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+            />
+            <p id="err-vcParticipants" class="hidden text-xs font-medium text-rose-600 mt-1.5">Participants info is required.</p>
+          </div>
+
+          <!-- Webex Lobby & Recording Options -->
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+            <div>
+              <span class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Webex Lobby / Unlocking Behavior</span>
+              <div class="space-y-2 text-xs">
+                <label class="flex items-center gap-2.5 cursor-pointer">
+                  <input type="radio" name="vcUnlocking" value="Guests wait in the lobby until the host admits them" checked onchange="vcUnlockingOption = this.value" class="text-blue-600" />
+                  <span class="text-slate-800 font-medium">Guests wait in the lobby until the host admits them (Recommended)</span>
+                </label>
+                <label class="flex items-center gap-2.5 cursor-pointer">
+                  <input type="radio" name="vcUnlocking" value="Guests can join the meeting directly without waiting in lobby" onchange="vcUnlockingOption = this.value" class="text-blue-600" />
+                  <span class="text-slate-800 font-medium">Guests can join the meeting directly without waiting in lobby</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-200">
+              <label class="flex items-center gap-2.5 cursor-pointer text-xs font-semibold text-slate-800">
+                <input
+                  type="checkbox"
+                  id="vcRecordingToggle"
+                  onchange="toggleVcRecordingField(this.checked)"
+                  class="h-4 w-4 rounded text-blue-600"
+                />
+                <span>Request Cloud Recording of the Webex Session</span>
+              </label>
+              <div id="vcRecordingEmailWrapper" class="hidden mt-2.5">
+                <input
+                  type="email"
+                  id="vcRecordingEmail"
+                  placeholder="Email address to receive recording link..."
+                  class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs text-slate-900 bg-white focus:border-blue-600 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Remarks -->
+          <div>
+            <label for="vcRemarks" class="block text-sm font-semibold text-slate-900 mb-1.5">
+              Remarks / Special Instructions <span class="text-xs font-normal text-slate-400">(Optional)</span>
+            </label>
+            <textarea
+              id="vcRemarks"
+              rows="2"
+              placeholder="Breakout rooms, co-host privileges, or live streaming notes..."
+              class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-2">
+            <button
+              type="button"
+              onclick="resetVcRequestForm()"
+              class="w-full sm:w-auto px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+            >
+              Clear Form
+            </button>
+            <button
+              type="submit"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-all"
+            >
+              Submit Video Conference Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 3: STARLINK BORROWER FORM (CLIENT & ADMIN)                       -->
+    <!-- ===================================================================== -->
+    <section id="view-starlink-request" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-slate-800"></div>
+        <div class="p-6 sm:p-8">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h2 class="text-2xl font-bold text-slate-900">Starlink Portable Internet Borrower Form</h2>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
+                Ref # assigned upon submission
+              </span>
+              <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+                * Indicates required question
+              </span>
+            </div>
+          </div>
+
+          <!-- Data Privacy Consent for Starlink Form -->
+          <div class="mt-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl p-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <p>
+              Pursuant to the Data Privacy Act of 2012, your information is collected solely for ICTU equipment accountability and deployment tracking. The borrower assumes responsibility for the safe custody and timely return of the Starlink kit.
+            </p>
+            <div class="mt-3 pt-3 border-t border-slate-200">
+              <label class="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  id="slPrivacyConsent"
+                  required
+                  class="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <span class="text-xs sm:text-sm font-semibold text-slate-800">
+                  I agree to the Data Privacy Notice and equipment accountability terms. <span class="text-rose-600">*</span>
+                </span>
+              </label>
+              <p id="err-slPrivacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                Please accept the privacy and accountability notice.
+              </p>
             </div>
           </div>
         </div>
@@ -696,13 +1175,13 @@
               </label>
               <p class="text-xs text-slate-500 mt-0.5 mb-3">Example: January 7, 2026</p>
               <input
-            <div class="flex items-center gap-2">
-              <span class="font-mono text-xs font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
-                Ref # assigned upon submission
-              </span>
-              <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
-                * Indicates required question
-              </span>
+                type="date"
+                id="slResEndDate"
+                name="slResEndDate"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <p id="err-slResEndDate" class="hidden text-xs font-medium text-rose-600 mt-2">Reservation end date is required (on or after start date).</p>
             </div>
           </div>
         </div>
@@ -1830,11 +2309,6 @@
       // Ticket ID is now generated and displayed exclusively after clicking Submit
       return validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
     }
-      const hiddenEl = document.getElementById('tatsTicketNumber');
-      if (hiddenEl) {
-        hiddenEl.value = String(validated.seriesNumber);
-      }
-    }
 
     function isTatsTicketNumberDuplicate(ticketNumOrId) {
       const normalized = String(ticketNumOrId).trim().toUpperCase();
@@ -1888,7 +2362,6 @@
     function refreshStarlinkSeriesNumberDisplay() {
       // Reference number is now generated and displayed exclusively after clicking Submit
       return getNextUniqueStarlinkSeriesNumber();
-    }
     }
 
     // =========================================================================
@@ -2139,6 +2612,20 @@
         }
       }
     }
+
+    function toggleVcRecordingField(isChecked) {
+      vcRecordingEnabled = Boolean(isChecked);
+      const wrapper = document.getElementById('vcRecordingEmailWrapper');
+      if (wrapper) wrapper.classList.toggle('hidden', !vcRecordingEnabled);
+    }
+
+    function resetVcRequestForm() {
+      const form = document.getElementById('vcRequestForm');
+      if (form) form.reset();
+      vcRecordingEnabled = false;
+      vcUnlockingOption = 'Guests wait in the lobby until the host admits them';
+      const wrapper = document.getElementById('vcRecordingEmailWrapper');
+      if (wrapper) wrapper.classList.add('hidden');
       ['err-vcTitle', 'err-vcDate', 'err-vcTime', 'err-vcLength', 'err-vcParticipants', 'err-vcHostCoHost', 'err-vcOfficeEmail', 'err-vcDivision'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
@@ -2265,6 +2752,12 @@
         }
       }
     }
+
+    function resetStarlinkForm() {
+      const form = document.getElementById('starlinkForm');
+      if (form) form.reset();
+      const consent = document.getElementById('slPrivacyConsent');
+      if (consent) consent.checked = false;
       ['err-slPrivacyConsent', 'err-slBorrowerName', 'err-slEmail', 'err-slPosition', 'err-slProgramUnit', 'err-slResStartDate', 'err-slResEndDate', 'err-slDateBorrowed', 'err-slDateReturned', 'err-slActivityTitle', 'err-slActivityLocation'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
@@ -2383,6 +2876,252 @@
           submitBtn.disabled = false;
           submitBtn.innerHTML = origBtnHtml;
         }
+      }
+    }
+
+    // =========================================================================
+    // MODALS, CLIENT TRACKER & STATUS ACTIONS
+    // =========================================================================
+
+    function closeConfirmationModal() {
+      const modal = document.getElementById('confirmationModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function handleConfirmationPrimaryAction() {
+      closeConfirmationModal();
+      if (currentRole === 'admin') {
+        switchTab('tracker');
+        switchAdminRecordSubtab(lastSubmittedType);
+      } else {
+        switchTab('client-status');
+        if (lastSubmittedTicketId) {
+          quickClientLookup(lastSubmittedTicketId);
+        }
+      }
+    }
+
+    function openImageModal(ticketId) {
+      const ticket = getTickets().find((t) => t.id === ticketId);
+      if (!ticket || !ticket.attachment || !ticket.attachment.dataUrl) {
+        showToast('No Image Available', 'This ticket does not have an image preview stored locally.', 'warning');
+        return;
+      }
+      document.getElementById('imageModalTitle').textContent = `${ticket.id} — ${ticket.attachment.name || 'Attachment'}`;
+      document.getElementById('modalFullImage').src = ticket.attachment.dataUrl;
+      document.getElementById('imageModalCaption').textContent = `${ticket.provinceFacility} (${ticket.fullName})`;
+      document.getElementById('imageModal').classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function openVcApproveModal(vcId) {
+      const vc = getVcRequests().find((v) => v.id === vcId);
+      if (!vc) return;
+      document.getElementById('vcApproveTargetId').value = vc.id;
+      document.getElementById('vcApproveSubtitle').textContent = `Series #${vc.seriesNumber} (${vc.id})`;
+      document.getElementById('vcApproveMeetingInfo').innerHTML = `
+        <p><span class="font-semibold">Meeting:</span> ${escapeHTML(vc.title)}</p>
+        <p><span class="font-semibold">Schedule:</span> ${escapeHTML(vc.dateOfMeeting)} at ${escapeHTML(vc.timeOfMeeting)} (${escapeHTML(vc.lengthHours)} hr/s)</p>
+        <p><span class="font-semibold">Division / Office:</span> ${escapeHTML(vc.divisionOffice)} (${escapeHTML(vc.officeEmail)})</p>
+      `;
+      const linkInput = document.getElementById('vcApproveWebexLinkInput');
+      linkInput.value = (vc.webexLink && /^https?:\/\//i.test(vc.webexLink)) ? vc.webexLink : '';
+      document.getElementById('err-vcApproveWebexLink').classList.add('hidden');
+      document.getElementById('vcApproveModal').classList.remove('hidden');
+    }
+
+    function closeVcApproveModal() {
+      const modal = document.getElementById('vcApproveModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function confirmVcApprovalWithLink(event) {
+      event.preventDefault();
+      const targetId = document.getElementById('vcApproveTargetId').value;
+      const linkVal = document.getElementById('vcApproveWebexLinkInput').value.trim();
+      const errEl = document.getElementById('err-vcApproveWebexLink');
+
+      if (!linkVal || !/^https?:\/\/.+/i.test(linkVal)) {
+        if (errEl) errEl.classList.remove('hidden');
+        return;
+      }
+      if (errEl) errEl.classList.add('hidden');
+
+      const vcList = getVcRequests();
+      const idx = vcList.findIndex((v) => v.id === targetId);
+      if (idx === -1) return;
+
+      vcList[idx].webexLink = linkVal;
+      vcList[idx].status = 'Scheduled / Approved';
+      saveVcRequests(vcList);
+
+      pushToSharedDatabase('updateStatus', 'Video Conference', {
+        id: targetId,
+        status: vcList[idx].status,
+        webexLink: vcList[idx].webexLink
+      });
+
+      closeVcApproveModal();
+      renderVcRequestsList();
+      renderDashboard();
+      showToast('Video Conference Approved', `Saved Webex link for ${targetId}.`, 'success');
+    }
+
+    function cycleVcRequestStatus(vcId) {
+      const vcList = getVcRequests();
+      const idx = vcList.findIndex((v) => v.id === vcId);
+      if (idx === -1) return;
+
+      if (vcList[idx].status === 'Scheduled / Approved') {
+        vcList[idx].status = 'Completed';
+      } else {
+        vcList[idx].status = 'Pending';
+        vcList[idx].webexLink = 'Awaiting Admin Webex Link';
+      }
+      saveVcRequests(vcList);
+
+      pushToSharedDatabase('updateStatus', 'Video Conference', {
+        id: vcId,
+        status: vcList[idx].status,
+        webexLink: vcList[idx].webexLink
+      });
+
+      renderVcRequestsList();
+      renderDashboard();
+      showToast(`${vcId} Status Updated`, `Now marked as "${vcList[idx].status}".`, 'success');
+    }
+
+    function cycleStarlinkRequestStatus(slId) {
+      const slList = getStarlinkRequests();
+      const idx = slList.findIndex((s) => s.id === slId);
+      if (idx === -1) return;
+
+      const current = slList[idx].status;
+      if (current === 'Pending') {
+        slList[idx].status = 'Approved / Borrowed';
+      } else if (current === 'Approved / Borrowed') {
+        slList[idx].status = 'Returned';
+      } else {
+        slList[idx].status = 'Pending';
+      }
+      saveStarlinkRequests(slList);
+
+      pushToSharedDatabase('updateStatus', 'Starlink Borrower', {
+        id: slId,
+        status: slList[idx].status
+      });
+
+      renderStarlinkRequestsList();
+      renderDashboard();
+      showToast(`${slId} Status Updated`, `Now marked as "${slList[idx].status}".`, 'success');
+    }
+
+    function quickClientLookup(refQuery) {
+      const input = document.getElementById('clientStatusLookupInput');
+      if (input) input.value = refQuery;
+      lookupClientRequestStatus(null, refQuery);
+    }
+
+    function lookupClientRequestStatus(event, overrideQuery) {
+      if (event) event.preventDefault();
+      const input = document.getElementById('clientStatusLookupInput');
+      const rawQuery = (overrideQuery !== undefined ? overrideQuery : (input ? input.value : '')).trim().toLowerCase();
+      const container = document.getElementById('clientStatusResultContainer');
+      if (!container) return;
+
+      if (!rawQuery) {
+        showToast('Enter Reference or Email', 'Please type a Ticket ID, Series #, Starlink Ref, or email.', 'warning');
+        return;
+      }
+
+      const matchedTats = getTickets().filter((t) =>
+        String(t.id).toLowerCase().includes(rawQuery) ||
+        String(t.email).toLowerCase() === rawQuery
+      );
+
+      const matchedVc = getVcRequests().filter((v) =>
+        String(v.id).toLowerCase().includes(rawQuery) ||
+        `series #${v.seriesNumber}`.includes(rawQuery) ||
+        String(v.seriesNumber) === rawQuery.replace(/\D/g, '') && rawQuery.replace(/\D/g, '').length > 0 ||
+        String(v.officeEmail).toLowerCase() === rawQuery
+      );
+
+      const matchedSl = getStarlinkRequests().filter((s) =>
+        String(s.id).toLowerCase().includes(rawQuery) ||
+        String(s.email).toLowerCase() === rawQuery
+      );
+
+      const cards = [];
+
+      matchedTats.forEach((t) => {
+        const isSolved = String(t.solved).toUpperCase() === 'YES';
+        cards.push(`
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">${escapeHTML(t.id)}</span>
+              <span class="text-xs font-bold px-3 py-1 rounded-full ${isSolved ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${isSolved ? 'Resolved / Solved (YES)' : 'Open / Pending TA Support'}
+              </span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(t.provinceFacility)}</h3>
+            <p class="text-xs text-slate-500 mt-0.5">System: ${escapeHTML(t.infoSystem)} &bull; Submitted: ${escapeHTML(formatTimestamp(t.submittedAt))}</p>
+            <p class="mt-3 text-xs text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200/80">${escapeHTML(t.errorDescription)}</p>
+          </div>
+        `);
+      });
+
+      matchedVc.forEach((v) => {
+        const hasUrl = v.webexLink && /^https?:\/\//i.test(v.webexLink);
+        cards.push(`
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg">Series #${escapeHTML(v.seriesNumber)} (${escapeHTML(v.id)})</span>
+              <span class="text-xs font-bold px-3 py-1 rounded-full ${v.status === 'Pending' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">
+                ${escapeHTML(v.status)}
+              </span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(v.title)}</h3>
+            <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
+            <div class="mt-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+              <span class="font-semibold text-slate-800">Webex Meeting Link:</span>
+              ${hasUrl
+                ? `<a href="${escapeHTML(v.webexLink)}" target="_blank" rel="noopener noreferrer" class="block mt-1 font-mono text-blue-600 font-semibold underline break-all">${escapeHTML(v.webexLink)}</a>`
+                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Webex Link')}</span>`
+              }
+            </div>
+          </div>
+        `);
+      });
+
+      matchedSl.forEach((s) => {
+        cards.push(`
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">${escapeHTML(s.id)}</span>
+              <span class="text-xs font-bold px-3 py-1 rounded-full ${s.status === 'Returned' ? 'bg-emerald-100 text-emerald-800' : 'bg-indigo-100 text-indigo-800'}">
+                ${escapeHTML(s.status)}
+              </span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(s.activityTitle)}</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Borrower: ${escapeHTML(s.borrowerName)} (${escapeHTML(s.programUnit)})</p>
+            <p class="mt-2 text-xs text-slate-700">Location: ${escapeHTML(s.activityLocation)} &bull; Borrowed: ${escapeHTML(s.dateBorrowed)} to ${escapeHTML(s.dateReturned)}</p>
+          </div>
+        `);
+      });
+
+      if (cards.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center">
+            <p class="text-sm font-bold text-slate-800">No Matching Requests Found</p>
+            <p class="text-xs text-slate-500 mt-1">Double-check your reference number or email address, or click "Refresh Status" above.</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = cards.join('');
       }
     }
 
