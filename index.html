@@ -214,6 +214,77 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- ===================================================================== -->
+    <!-- VIEW 00: DATA PRIVACY ACT OF 2012 GATE (SHOWN FIRST BEFORE REQUESTS)  -->
+    <!-- ===================================================================== -->
+    <section id="view-privacy-gate" class="max-w-3xl mx-auto space-y-6 animate-fade-up">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2.5 bg-gradient-to-r from-indigo-600 via-teal-600 to-slate-800"></div>
+        <div class="p-6 sm:p-8">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <span class="inline-flex items-center text-[11px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+                Required Before Proceeding
+              </span>
+              <h2 class="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+                Data Privacy Act of 2012 Notice &amp; Consent
+              </h2>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl p-5 text-sm text-slate-700 leading-relaxed space-y-3">
+            <p>
+              Pursuant to the requirements of the <strong>Data Privacy Act of 2012 (Republic Act No. 10173)</strong>, we would like to secure your consent on the collection, processing, storage, and usage of the personal information obtained from this portal (including Technical Assistance Ticketing Submission, Video Conference Requests, and Starlink Equipment Borrowing).
+            </p>
+            <p>
+              The provider is committed to ensuring the confidentiality of the information that you provide and guarantees that all data will be used and processed solely for official ICTU technical support, scheduling, and equipment accountability in accordance with existing laws.
+            </p>
+            <p>
+              By proceeding, you accept and authorize the processing of your submitted information and certify that all details you will provide are true and correct.
+            </p>
+          </div>
+
+          <div class="mt-6 pt-5 border-t border-slate-200 space-y-4">
+            <label class="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                id="globalPrivacyGateCheckbox"
+                onchange="document.getElementById('err-globalPrivacyGate').classList.add('hidden')"
+                class="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+              />
+              <span class="text-xs sm:text-sm font-semibold text-slate-800">
+                I have read and agree to the Data Privacy Act of 2012 Notice and Consent, and certify that all information I provide will be true and correct. <span class="text-rose-600">*</span>
+              </span>
+            </label>
+            <p id="err-globalPrivacyGate" class="hidden text-xs font-medium text-rose-600">
+              Please check the consent box above before proceeding to the request forms.
+            </p>
+
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+              <p class="text-xs text-slate-500">
+                Applies to TATS Tickets, Video Conference &amp; Starlink Borrower forms.
+              </p>
+              <button
+                type="button"
+                onclick="acceptGlobalPrivacyAndProceed()"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-md hover:shadow-lg transition-all"
+              >
+                <span>I Agree &amp; Proceed to Request</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
     <!-- VIEW 0: ANALYTICS DASHBOARD (ADMIN ONLY)                              -->
     <!-- ===================================================================== -->
     <section id="view-dashboard" class="hidden space-y-6 animate-fade-up">
@@ -485,13 +556,13 @@
     <!-- ===================================================================== -->
     <!-- VIEW 1: TATS FORM SUBMISSION (CLIENT & ADMIN)                         -->
     <!-- ===================================================================== -->
-    <section id="view-submit" class="max-w-3xl mx-auto space-y-6 animate-fade-up">
+    <section id="view-submit" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
 
-      <!-- Form Banner & Data Privacy Act Notice Card -->
+      <!-- Form Banner Card -->
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="h-2.5 bg-gradient-to-r from-teal-600 via-cyan-600 to-slate-800"></div>
         <div class="p-6 sm:p-8">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="text-2xl font-bold text-slate-900">Technical Assistance Ticketing Submission (TATS)</h2>
             <div class="flex items-center gap-2">
               <span class="font-mono text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">
@@ -502,36 +573,9 @@
               </span>
             </div>
           </div>
-
-          <!-- Data Privacy Act Notice Box -->
-          <div class="mt-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl p-4 sm:p-5 text-sm text-slate-700 leading-relaxed">
-            <div class="flex items-center gap-2 font-semibold text-slate-900 mb-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span>Data Privacy Act of 2012 Notice &amp; Consent</span>
-            </div>
-            <p class="text-slate-600">
-              Pursuant to the requirements of the Data Privacy Act of 2012, we would like to secure your consent on the collection, processing, storage, and usage of the personal information obtained from this form. The provider is committed in ensuring the confidentiality of the information that you provided in this form and that all data will be used and processed in accordance with existing laws. By answering this form, you accept and authorizes to process this information. This includes the certification that all of the information provided is true and correct.
-            </p>
-
-            <div class="mt-4 pt-3 border-t border-slate-200">
-              <label class="flex items-start gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  id="privacyConsent"
-                  required
-                  class="mt-1 h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
-                />
-                <span class="text-xs sm:text-sm font-semibold text-slate-800">
-                  I have read and agree to the Data Privacy Act of 2012 Notice and certify that all information provided is true and correct. <span class="text-rose-600">*</span>
-                </span>
-              </label>
-              <p id="err-privacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-                You must agree to the Data Privacy Act of 2012 Notice before submitting.
-              </p>
-            </div>
-          </div>
+          <p class="text-sm text-slate-500 mt-2">
+            Submit technical support requests for DOH Health Information Systems (iHOMIS, HBSYS, IHOMIS+, and iClinicSys).
+          </p>
         </div>
       </div>
 
@@ -977,7 +1021,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="h-2.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-slate-800"></div>
         <div class="p-6 sm:p-8">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
             <h2 class="text-2xl font-bold text-slate-900">Starlink Portable Internet Borrower Form</h2>
             <div class="flex items-center gap-2">
               <span class="font-mono text-xs font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
@@ -988,29 +1032,9 @@
               </span>
             </div>
           </div>
-
-          <!-- Data Privacy Consent for Starlink Form -->
-          <div class="mt-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl p-4 text-xs sm:text-sm text-slate-600 leading-relaxed">
-            <p>
-              Pursuant to the Data Privacy Act of 2012, your information is collected solely for ICTU equipment accountability and deployment tracking. The borrower assumes responsibility for the safe custody and timely return of the Starlink kit.
-            </p>
-            <div class="mt-3 pt-3 border-t border-slate-200">
-              <label class="flex items-start gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  id="slPrivacyConsent"
-                  required
-                  class="mt-0.5 h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                />
-                <span class="text-xs sm:text-sm font-semibold text-slate-800">
-                  I agree to the Data Privacy Notice and equipment accountability terms. <span class="text-rose-600">*</span>
-                </span>
-              </label>
-              <p id="err-slPrivacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-                Please accept the privacy and accountability notice.
-              </p>
-            </div>
-          </div>
+          <p class="text-sm text-slate-500 mt-2">
+            Reserve a portable Starlink satellite internet unit for field deployment or GIDA outreach activities.
+          </p>
         </div>
       </div>
 
@@ -1804,6 +1828,7 @@
     const VC_SERIES_COUNTER_KEY = 'tats_vc_series_counter_v1';
     const TATS_SERIES_COUNTER_KEY = 'tats_ticket_series_counter_v1';
     const STARLINK_SERIES_COUNTER_KEY = 'tats_starlink_series_counter_v1';
+    const PRIVACY_CONSENT_SESSION_KEY = 'tats_privacy_consent_accepted_v1';
     const ADMIN_SESSION_KEY = 'tats_admin_authenticated_v2';
     const ADMIN_TOKEN_KEY = 'tats_admin_session_token_v1';
     const ADMIN_LOCKOUT_KEY = 'tats_admin_lockout_state_v1';
@@ -1817,6 +1842,7 @@
     const memoryStorage = {};
     let currentRole = 'client';
     let activeTab = 'submit';
+    let pendingTargetTab = 'submit';
     let currentAttachment = null;
     let lastSubmittedTicketId = '';
     let lastSubmittedType = 'tats';
@@ -1978,27 +2004,31 @@
     }
 
     // =========================================================================
-    // NAVIGATION & ROLE SWITCHING (WITH SERVER-SIDE AUTH & LOCKOUT)
+    // DATA PRIVACY ACT OF 2012 GATE & NAVIGATION
     // =========================================================================
+
+    function hasAcceptedPrivacyGate() {
+      return safeGetStorage('session', PRIVACY_CONSENT_SESSION_KEY) === 'true';
+    }
+
+    function acceptGlobalPrivacyAndProceed() {
+      const cb = document.getElementById('globalPrivacyGateCheckbox');
+      const err = document.getElementById('err-globalPrivacyGate');
+      if (!cb || !cb.checked) {
+        if (err) err.classList.remove('hidden');
+        showToast('Consent Required', 'Please accept the Data Privacy Act of 2012 Notice before proceeding.', 'warning');
+        return;
+      }
+      if (err) err.classList.add('hidden');
+      safeSetStorage('session', PRIVACY_CONSENT_SESSION_KEY, 'true');
+      switchTab(pendingTargetTab || 'submit');
+    }
 
     function isAdminAuthenticated() {
       return safeGetStorage('session', ADMIN_SESSION_KEY) === 'true' && Boolean(safeGetStorage('session', ADMIN_TOKEN_KEY));
     }
 
-    function switchTab(tabName) {
-      const adminOnlyTabs = ['dashboard', 'tracker'];
-      if (adminOnlyTabs.includes(tabName) && (currentRole !== 'admin' || !isAdminAuthenticated())) {
-        openAdminLoginModal();
-        return;
-      }
-
-      activeTab = tabName;
-      const allViews = ['submit', 'vc-request', 'starlink-request', 'client-status', 'dashboard', 'tracker'];
-      allViews.forEach((v) => {
-        const sec = document.getElementById(`view-${v}`);
-        if (sec) sec.classList.toggle('hidden', v !== tabName);
-      });
-
+    function updateNavHighlights(tabName) {
       const activeClasses = 'flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all bg-teal-600 text-white shadow-sm whitespace-nowrap';
       const inactiveClasses = 'flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap';
 
@@ -2024,6 +2054,35 @@
         const btn = document.getElementById(adminTabMap[key]);
         if (btn) btn.className = key === tabName ? activeClasses : inactiveClasses;
       });
+    }
+
+    function switchTab(tabName) {
+      const adminOnlyTabs = ['dashboard', 'tracker'];
+      if (adminOnlyTabs.includes(tabName) && (currentRole !== 'admin' || !isAdminAuthenticated())) {
+        openAdminLoginModal();
+        return;
+      }
+
+      // Show Data Privacy Act of 2012 Notice & Consent first before proceeding to client requests
+      if (currentRole !== 'admin' && !hasAcceptedPrivacyGate()) {
+        pendingTargetTab = tabName;
+        const allViews = ['privacy-gate', 'submit', 'vc-request', 'starlink-request', 'client-status', 'dashboard', 'tracker'];
+        allViews.forEach((v) => {
+          const sec = document.getElementById(`view-${v}`);
+          if (sec) sec.classList.toggle('hidden', v !== 'privacy-gate');
+        });
+        updateNavHighlights(tabName);
+        return;
+      }
+
+      activeTab = tabName;
+      const allViews = ['privacy-gate', 'submit', 'vc-request', 'starlink-request', 'client-status', 'dashboard', 'tracker'];
+      allViews.forEach((v) => {
+        const sec = document.getElementById(`view-${v}`);
+        if (sec) sec.classList.toggle('hidden', v !== tabName);
+      });
+
+      updateNavHighlights(tabName);
 
       if (tabName === 'dashboard') {
         renderDashboard();
@@ -2135,7 +2194,6 @@
         let authorized = false;
         let serverToken = '';
 
-        // 1. Primary verification against Google Apps Script server (Script Properties)
         if (SHARED_DB_API_URL && !SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
           try {
             const verifyUrl = `${SHARED_DB_API_URL}?action=verifyAdmin&passcode=${encodeURIComponent(entered)}`;
@@ -2147,7 +2205,6 @@
             } else if (data && data.status === 'unauthorized') {
               authorized = false;
             } else {
-              // Fallback if Apps Script hasn't been redeployed with verifyAdmin yet
               const digest = await sha256Hex(entered);
               if (digest === FALLBACK_PASSCODE_SHA256) {
                 authorized = true;
@@ -2609,12 +2666,10 @@
     function resetTatsForm() {
       const form = document.getElementById('tatsForm');
       if (form) form.reset();
-      const consent = document.getElementById('privacyConsent');
-      if (consent) consent.checked = false;
       const solvedNo = document.getElementById('solvedNo');
       if (solvedNo) solvedNo.checked = true;
       clearTatsAttachment();
-      ['err-privacyConsent', 'err-email', 'err-fullName', 'err-provinceFacility', 'err-errorDescription', 'err-screenshot', 'err-solved'].forEach((id) => {
+      ['err-email', 'err-fullName', 'err-provinceFacility', 'err-errorDescription', 'err-screenshot', 'err-solved'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
@@ -2623,7 +2678,6 @@
     async function handleTatsFormSubmit(event) {
       event.preventDefault();
 
-      const privacyConsent = document.getElementById('privacyConsent').checked;
       const email = document.getElementById('email').value.trim();
       const fullName = document.getElementById('fullName').value.trim();
       const provinceFacility = document.getElementById('provinceFacility').value.trim();
@@ -2642,7 +2696,6 @@
         if (show) isValid = false;
       };
 
-      toggleErr('err-privacyConsent', !privacyConsent);
       toggleErr('err-email', !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
       toggleErr('err-fullName', !fullName);
       toggleErr('err-provinceFacility', !provinceFacility);
@@ -2651,7 +2704,7 @@
       toggleErr('err-solved', !solvedYesChecked && !solvedNoChecked);
 
       if (!isValid) {
-        showToast('Missing Required Fields', 'Please complete all required TATS questions and consent.', 'error');
+        showToast('Missing Required Fields', 'Please complete all required TATS questions.', 'error');
         return;
       }
 
@@ -2876,9 +2929,7 @@
     function resetStarlinkForm() {
       const form = document.getElementById('starlinkForm');
       if (form) form.reset();
-      const consent = document.getElementById('slPrivacyConsent');
-      if (consent) consent.checked = false;
-      ['err-slPrivacyConsent', 'err-slBorrowerName', 'err-slEmail', 'err-slPosition', 'err-slProgramUnit', 'err-slResStartDate', 'err-slResEndDate', 'err-slDateBorrowed', 'err-slDateReturned', 'err-slActivityTitle', 'err-slActivityLocation'].forEach((id) => {
+      ['err-slBorrowerName', 'err-slEmail', 'err-slPosition', 'err-slProgramUnit', 'err-slResStartDate', 'err-slResEndDate', 'err-slDateBorrowed', 'err-slDateReturned', 'err-slActivityTitle', 'err-slActivityLocation'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
@@ -2887,7 +2938,6 @@
     async function handleStarlinkFormSubmit(event) {
       event.preventDefault();
 
-      const privacyConsent = document.getElementById('slPrivacyConsent').checked;
       const email = document.getElementById('slEmail').value.trim();
       const borrowerName = document.getElementById('slBorrowerName').value.trim();
       const position = document.getElementById('slPosition').value.trim();
@@ -2907,7 +2957,6 @@
         if (show) isValid = false;
       };
 
-      toggleErr('err-slPrivacyConsent', !privacyConsent);
       toggleErr('err-slEmail', !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
       toggleErr('err-slBorrowerName', !borrowerName);
       toggleErr('err-slPosition', !position);
@@ -2920,7 +2969,7 @@
       toggleErr('err-slActivityLocation', !activityLocation);
 
       if (!isValid) {
-        showToast('Incomplete Form', 'Please check all required Starlink reservation fields and consent.', 'error');
+        showToast('Incomplete Form', 'Please check all required Starlink reservation fields.', 'error');
         return;
       }
 
