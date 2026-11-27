@@ -1873,6 +1873,45 @@
       });
     }
 
+    /**
+     * Formats date values (including Google Sheets ISO timestamps like 2026-12-16T16:00:00.000Z)
+     * into a clean human-readable date (e.g., Dec 17, 2026).
+     */
+    function formatDisplayDate(dateVal) {
+      if (!dateVal) return 'N/A';
+      const str = String(dateVal).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+        const [y, m, d] = str.split('-').map(Number);
+        const localDate = new Date(y, m - 1, d);
+        return localDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      const parsed = new Date(str);
+      if (!isNaN(parsed.getTime())) {
+        return parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      return str;
+    }
+
+    /**
+     * Formats time values (including Google Sheets 1899-12-30T...Z time objects and HH:mm strings)
+     * into a clean 12-hour clock time (e.g., 8:00 PM).
+     */
+    function formatDisplayTime(timeVal) {
+      if (!timeVal) return 'N/A';
+      const str = String(timeVal).trim();
+      if (/^\d{1,2}:\d{2}(:\d{2})?$/.test(str)) {
+        const [hh, mm] = str.split(':').map(Number);
+        const d = new Date();
+        d.setHours(hh, mm, 0, 0);
+        return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+      const parsed = new Date(str);
+      if (!isNaN(parsed.getTime())) {
+        return parsed.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      }
+      return str;
+    }
+
     // =========================================================================
     // DATA ACCESSORS
     // =========================================================================
@@ -3111,7 +3150,7 @@
       document.getElementById('vcApproveSubtitle').textContent = `Series #${vc.seriesNumber} (${vc.id})`;
       document.getElementById('vcApproveMeetingInfo').innerHTML = `
         <p><span class="font-semibold">Meeting:</span> ${escapeHTML(vc.title)}</p>
-        <p><span class="font-semibold">Schedule:</span> ${escapeHTML(vc.dateOfMeeting)} at ${escapeHTML(vc.timeOfMeeting)} (${escapeHTML(vc.lengthHours)} hr/s)</p>
+        <p><span class="font-semibold">Schedule:</span> ${escapeHTML(formatDisplayDate(vc.dateOfMeeting))} at ${escapeHTML(formatDisplayTime(vc.timeOfMeeting))} (${escapeHTML(vc.lengthHours)} hr/s)</p>
         <p><span class="font-semibold">Division / Office:</span> ${escapeHTML(vc.divisionOffice)} (${escapeHTML(vc.officeEmail)})</p>
       `;
       const linkInput = document.getElementById('vcApproveWebexLinkInput');
@@ -3322,7 +3361,7 @@
               </span>
             </div>
             <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(v.title)}</h3>
-            <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
+            <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(formatDisplayDate(v.dateOfMeeting))} at ${escapeHTML(formatDisplayTime(v.timeOfMeeting))} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
             <div class="mt-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
               <div class="flex items-center justify-between gap-2 mb-1.5">
                 <span class="font-semibold text-slate-800">Meeting Details:</span>
@@ -3356,7 +3395,7 @@
             </div>
             <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(s.activityTitle)}</h3>
             <p class="text-xs text-slate-500 mt-0.5">Borrower: ${escapeHTML(s.borrowerName)} (${escapeHTML(s.programUnit)})</p>
-            <p class="mt-2 text-xs text-slate-700">Location: ${escapeHTML(s.activityLocation)} &bull; Borrowed: ${escapeHTML(s.dateBorrowed)} to ${escapeHTML(s.dateReturned)}</p>
+            <p class="mt-2 text-xs text-slate-700">Location: ${escapeHTML(s.activityLocation)} &bull; Borrowed: ${escapeHTML(formatDisplayDate(s.dateBorrowed))} to ${escapeHTML(formatDisplayDate(s.dateReturned))}</p>
           </div>
         `);
       });
@@ -3595,7 +3634,7 @@
                 </div>
                 <h3 class="text-base font-bold text-slate-900 pt-1">${escapeHTML(item.title)}</h3>
                 <p class="text-xs text-slate-600">
-                  Schedule: <span class="font-semibold text-slate-800">${escapeHTML(item.dateOfMeeting)}</span> at <span class="font-semibold text-slate-800">${escapeHTML(item.timeOfMeeting)}</span> (${escapeHTML(item.lengthHours)} hr/s)
+                  Schedule: <span class="font-semibold text-slate-800">${escapeHTML(formatDisplayDate(item.dateOfMeeting))}</span> at <span class="font-semibold text-slate-800">${escapeHTML(formatDisplayTime(item.timeOfMeeting))}</span> (${escapeHTML(item.lengthHours)} hr/s)
                 </p>
                 <p class="text-xs text-slate-500">
                   Host &amp; Co-Host: <span class="font-medium text-slate-700">${escapeHTML(item.hostAndCoHost)}</span> &bull; Office Email: <span class="text-slate-700">${escapeHTML(item.officeEmail)}</span>
@@ -3721,7 +3760,7 @@
                   Borrower: <span class="font-semibold text-slate-800">${escapeHTML(item.borrowerName)}</span> (${escapeHTML(item.position)}) &bull; ${escapeHTML(item.email)}
                 </p>
                 <p class="text-xs text-slate-500">
-                  Location: <span class="font-medium text-slate-700">${escapeHTML(item.activityLocation)}</span> &bull; Activity: <span class="font-medium text-slate-700">${escapeHTML(item.resStartDate)} to ${escapeHTML(item.resEndDate)}</span>
+                  Location: <span class="font-medium text-slate-700">${escapeHTML(item.activityLocation)}</span> &bull; Activity: <span class="font-medium text-slate-700">${escapeHTML(formatDisplayDate(item.resStartDate))} to ${escapeHTML(formatDisplayDate(item.resEndDate))}</span>
                 </p>
               </div>
 
@@ -3737,7 +3776,7 @@
             </div>
 
             <div class="mt-3.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-1">
-              <p><span class="font-semibold text-slate-800">Date Borrowed:</span> ${escapeHTML(item.dateBorrowed || 'Not yet released')} &bull; <span class="font-semibold text-slate-800">Date Returned:</span> ${escapeHTML(item.dateReturned || 'Pending return')}</p>
+              <p><span class="font-semibold text-slate-800">Date Borrowed:</span> ${escapeHTML(item.dateBorrowed ? formatDisplayDate(item.dateBorrowed) : 'Not yet released')} &bull; <span class="font-semibold text-slate-800">Date Returned:</span> ${escapeHTML(item.dateReturned ? formatDisplayDate(item.dateReturned) : 'Pending return')}</p>
               ${item.remarks ? `<p><span class="font-semibold text-slate-800">Remarks:</span> ${escapeHTML(item.remarks)}</p>` : ''}
             </div>
           </div>
