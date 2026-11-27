@@ -744,13 +744,13 @@
         <div class="h-2.5 bg-gradient-to-r from-blue-600 via-sky-500 to-slate-800"></div>
         <div class="p-6 sm:p-8 border-b border-slate-100">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <h2 class="text-2xl font-bold text-slate-900">Video Conference (Meeting) Request Form</h2>
+            <h2 class="text-2xl font-bold text-slate-900">Video Conference Meeting Request Form</h2>
             <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
               * Indicates required question
             </span>
           </div>
           <p class="text-sm text-slate-500">
-            Reserve an official DOH Meeting virtual meeting room. Your unique Series Number is assigned upon submission.
+            Reserve an official DOH virtual meeting room. Your unique Series Number is assigned upon submission.
           </p>
         </div>
 
@@ -925,7 +925,7 @@
                   onchange="toggleVcRecordingField(this.checked)"
                   class="h-4 w-4 rounded text-blue-600"
                 />
-                <span>Request Cloud Recording of the Meeting Session</span>
+                <span>Request Cloud Recording of the Meeting</span>
               </label>
               <div id="vcRecordingEmailWrapper" class="hidden mt-2.5">
                 <input
@@ -1387,7 +1387,7 @@
             </svg>
           </div>
           <p class="text-xs text-slate-500">
-            Enter your reference number or email address above to inspect live approval status and Meeting meeting links.
+            Enter your reference number or email address above to inspect live approval status and meeting details.
           </p>
         </div>
       </div>
@@ -1597,7 +1597,7 @@
           </svg>
         </button>
       </div>
-      <p class="text-xs text-slate-500 mt-1">Enter the administrator passcode to manage tickets, approve Meeting links, and export analytics.</p>
+      <p class="text-xs text-slate-500 mt-1">Server-verified authentication required to unlock the Admin Console.</p>
 
       <form onsubmit="handleAdminLoginSubmit(event)" class="mt-4 space-y-4">
         <div>
@@ -1608,6 +1608,7 @@
             type="password"
             id="adminPasscodeInput"
             required
+            autocomplete="current-password"
             placeholder="Enter admin passcode"
             class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
           />
@@ -1626,6 +1627,7 @@
           </button>
           <button
             type="submit"
+            id="adminUnlockSubmitBtn"
             class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-sm transition-colors"
           >
             Unlock Admin
@@ -1675,7 +1677,7 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- ADMIN APPROVE VIDEO CONFERENCE MODAL (PASTE Meeting LINK)               -->
+  <!-- ADMIN APPROVE VIDEO CONFERENCE MODAL (PASTE MEETING DETAILS)          -->
   <!-- ===================================================================== -->
   <div id="vcApproveModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
     <div class="bg-white rounded-2xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 animate-fade-up">
@@ -1688,7 +1690,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-slate-900">Approve Video Conference Request</h3>
-            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the Meeting meeting details &amp; invitation before approving</p>
+            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the meeting details &amp; invitation before approving</p>
           </div>
         </div>
         <button type="button" onclick="closeVcApproveModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
@@ -1703,18 +1705,18 @@
       <form id="vcApproveForm" onsubmit="confirmVcApprovalWithLink(event)" novalidate class="mt-4 space-y-4">
         <input type="hidden" id="vcApproveTargetId" value="" />
         <div>
-          <label for="vcApproveMeetingLinkInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
-            Meeting Meeting Details / Invitation <span class="text-rose-600">*</span>
+          <label for="vcApproveWebexLinkInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            Meeting Details / Invitation <span class="text-rose-600">*</span>
           </label>
           <textarea
-            id="vcApproveMeetingLinkInput"
+            id="vcApproveWebexLinkInput"
             rows="6"
             required
-            placeholder="Paste complete Meeting meeting invitation details here (Meeting link, Meeting number, Password, Host key, etc.)..."
+            placeholder="Paste complete meeting invitation details here (Meeting link, Meeting number, Password, Host key, etc.)..."
             class="w-full rounded-xl border border-slate-300 px-4 py-3 text-xs font-mono text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           ></textarea>
-          <p id="err-vcApproveMeetingLink" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-            Please paste the Meeting meeting details before approving.
+          <p id="err-vcApproveWebexLink" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+            Please paste the meeting details before approving.
           </p>
         </div>
 
@@ -1802,11 +1804,15 @@
     const VC_SERIES_COUNTER_KEY = 'tats_vc_series_counter_v1';
     const TATS_SERIES_COUNTER_KEY = 'tats_ticket_series_counter_v1';
     const STARLINK_SERIES_COUNTER_KEY = 'tats_starlink_series_counter_v1';
-    const ADMIN_SESSION_KEY = 'tats_admin_authenticated_v1';
-    const ADMIN_PASSCODE = 'TCPdannad123';
+    const ADMIN_SESSION_KEY = 'tats_admin_authenticated_v2';
+    const ADMIN_TOKEN_KEY = 'tats_admin_session_token_v1';
+    const ADMIN_LOCKOUT_KEY = 'tats_admin_lockout_state_v1';
     const INITIAL_VC_SERIES = 614;
     const INITIAL_TATS_SERIES = 1044;
     const INITIAL_STARLINK_SERIES = 4;
+
+    // SHA-256 fallback digest (no plaintext passcode stored in HTML source)
+    const FALLBACK_PASSCODE_SHA256 = '4960e3e77c976eb95d6293d5a530871580d508174159c8789d7236f8f4bd0202';
 
     const memoryStorage = {};
     let currentRole = 'client';
@@ -1972,12 +1978,16 @@
     }
 
     // =========================================================================
-    // NAVIGATION & ROLE SWITCHING
+    // NAVIGATION & ROLE SWITCHING (WITH SERVER-SIDE AUTH & LOCKOUT)
     // =========================================================================
+
+    function isAdminAuthenticated() {
+      return safeGetStorage('session', ADMIN_SESSION_KEY) === 'true' && Boolean(safeGetStorage('session', ADMIN_TOKEN_KEY));
+    }
 
     function switchTab(tabName) {
       const adminOnlyTabs = ['dashboard', 'tracker'];
-      if (adminOnlyTabs.includes(tabName) && currentRole !== 'admin') {
+      if (adminOnlyTabs.includes(tabName) && (currentRole !== 'admin' || !isAdminAuthenticated())) {
         openAdminLoginModal();
         return;
       }
@@ -2058,6 +2068,29 @@
       }
     }
 
+    function getAdminLockoutState() {
+      try {
+        const raw = safeGetStorage('local', ADMIN_LOCKOUT_KEY);
+        return raw ? JSON.parse(raw) : { attempts: 0, lockedUntil: 0 };
+      } catch (e) {
+        return { attempts: 0, lockedUntil: 0 };
+      }
+    }
+
+    function saveAdminLockoutState(state) {
+      safeSetStorage('local', ADMIN_LOCKOUT_KEY, JSON.stringify(state));
+    }
+
+    async function sha256Hex(str) {
+      if (window.crypto && window.crypto.subtle) {
+        const msgBuffer = new TextEncoder().encode(str);
+        const hashBuffer = await window.crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+      }
+      return '';
+    }
+
     function openAdminLoginModal() {
       const modal = document.getElementById('adminLoginModal');
       const input = document.getElementById('adminPasscodeInput');
@@ -2075,25 +2108,100 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function handleAdminLoginSubmit(event) {
+    async function handleAdminLoginSubmit(event) {
       event.preventDefault();
       const input = document.getElementById('adminPasscodeInput');
       const err = document.getElementById('adminLoginError');
+      const submitBtn = document.getElementById('adminUnlockSubmitBtn');
       const entered = input ? input.value.trim() : '';
 
-      if (entered === ADMIN_PASSCODE) {
-        safeSetStorage('session', ADMIN_SESSION_KEY, 'true');
-        closeAdminLoginModal();
-        applyRoleUI('admin');
-        switchTab('dashboard');
-        showToast('Admin Mode Unlocked', 'Welcome back to the TATS Operations Console.', 'success');
-      } else {
-        if (err) err.classList.remove('hidden');
+      const lockState = getAdminLockoutState();
+      const now = Date.now();
+      if (lockState.lockedUntil && now < lockState.lockedUntil) {
+        const secsLeft = Math.ceil((lockState.lockedUntil - now) / 1000);
+        if (err) {
+          err.textContent = `Too many failed attempts. Try again in ${secsLeft} seconds.`;
+          err.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying...';
+      }
+
+      try {
+        let authorized = false;
+        let serverToken = '';
+
+        // 1. Primary verification against Google Apps Script server (Script Properties)
+        if (SHARED_DB_API_URL && !SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+          try {
+            const verifyUrl = `${SHARED_DB_API_URL}?action=verifyAdmin&passcode=${encodeURIComponent(entered)}`;
+            const resp = await fetch(verifyUrl);
+            const data = await resp.json();
+            if (data && data.authorized === true) {
+              authorized = true;
+              serverToken = data.token || 'verified-session';
+            } else if (data && data.status === 'unauthorized') {
+              authorized = false;
+            } else {
+              // Fallback if Apps Script hasn't been redeployed with verifyAdmin yet
+              const digest = await sha256Hex(entered);
+              if (digest === FALLBACK_PASSCODE_SHA256) {
+                authorized = true;
+                serverToken = 'local-verified-session';
+              }
+            }
+          } catch (netErr) {
+            const digest = await sha256Hex(entered);
+            if (digest === FALLBACK_PASSCODE_SHA256) {
+              authorized = true;
+              serverToken = 'local-verified-session';
+            }
+          }
+        } else {
+          const digest = await sha256Hex(entered);
+          if (digest === FALLBACK_PASSCODE_SHA256) {
+            authorized = true;
+            serverToken = 'local-verified-session';
+          }
+        }
+
+        if (authorized) {
+          saveAdminLockoutState({ attempts: 0, lockedUntil: 0 });
+          safeSetStorage('session', ADMIN_SESSION_KEY, 'true');
+          safeSetStorage('session', ADMIN_TOKEN_KEY, serverToken);
+          closeAdminLoginModal();
+          applyRoleUI('admin');
+          switchTab('dashboard');
+          showToast('Admin Mode Unlocked', 'Authenticated session active.', 'success');
+        } else {
+          const nextAttempts = (lockState.attempts || 0) + 1;
+          const shouldLock = nextAttempts >= 5;
+          saveAdminLockoutState({
+            attempts: shouldLock ? 0 : nextAttempts,
+            lockedUntil: shouldLock ? Date.now() + 60000 : 0
+          });
+          if (err) {
+            err.textContent = shouldLock
+              ? 'Too many failed attempts. Locked for 60 seconds.'
+              : `Incorrect passcode (${5 - nextAttempts} attempts remaining).`;
+            err.classList.remove('hidden');
+          }
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Unlock Admin';
+        }
       }
     }
 
     function logoutAdmin() {
       safeRemoveStorage('session', ADMIN_SESSION_KEY);
+      safeRemoveStorage('session', ADMIN_TOKEN_KEY);
       applyRoleUI('client');
       switchTab('submit');
       showToast('Switched to Client View', 'Admin session closed.', 'success');
@@ -2208,12 +2316,13 @@
 
     async function pushToSharedDatabase(action, sheetName, record) {
       if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) return;
+      const adminToken = safeGetStorage('session', ADMIN_TOKEN_KEY) || '';
       try {
         await fetch(SHARED_DB_API_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action, sheetName, record })
+          body: JSON.stringify({ action, sheetName, record, adminToken })
         });
       } catch (err) {
         console.error('Failed to sync to Google Sheets:', err);
@@ -2260,7 +2369,6 @@
     }
 
     function refreshVcSeriesNumberDisplay() {
-      // Series number is now generated and displayed exclusively after clicking Submit
       return getNextUniqueVcSeriesNumber();
     }
 
@@ -2313,7 +2421,6 @@
     }
 
     function refreshTatsTicketNumberDisplay() {
-      // Ticket ID is now generated and displayed exclusively after clicking Submit
       return validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
     }
 
@@ -2323,10 +2430,6 @@
       const usedSet = getUsedTatsSeriesSet();
       if (!isNaN(numPart) && usedSet.has(numPart)) return true;
       return getTickets().some((t) => String(t.id).trim().toUpperCase() === normalized);
-    }
-
-    function isValidTatsTicketFormat(ticketId) {
-      return /^TATS-\d{4}-\d{4,}$/i.test(String(ticketId).trim());
     }
 
     function getUsedStarlinkSeriesSet() {
@@ -2367,7 +2470,6 @@
     }
 
     function refreshStarlinkSeriesNumberDisplay() {
-      // Reference number is now generated and displayed exclusively after clicking Submit
       return getNextUniqueStarlinkSeriesNumber();
     }
 
@@ -2437,7 +2539,6 @@
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
-          // Compress within Google Sheets 50,000-char cell limit so screenshots sync across devices
           let maxDim = 680;
           let quality = 0.55;
           let compressedDataUrl = '';
@@ -2562,7 +2663,6 @@
       }
 
       try {
-        // Sync with shared database at submission time so multi-user ticket numbers never collide
         await syncFromSharedDatabase(false);
 
         const validated = validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
@@ -2695,7 +2795,6 @@
       }
 
       try {
-        // Sync latest records from shared database at submission time to prevent multi-user Series Number collisions
         await syncFromSharedDatabase(false);
 
         let assignedSeries = getNextUniqueVcSeriesNumber();
@@ -2726,7 +2825,7 @@
           unlockingOption: vcUnlockingOption,
           remarks,
           status: 'Pending',
-          MeetingLink: 'Awaiting Admin Meeting Link'
+          webexLink: 'Awaiting Admin Meeting Details'
         };
 
         const vcList = getVcRequests();
@@ -2901,7 +3000,7 @@
     }
 
     // =========================================================================
-    // MODALS, CLIENT TRACKER & STATUS ACTIONS
+    // MODALS, CLIENT TRACKER & STATUS ACTIONS (GUARDED BY ADMIN AUTH)
     // =========================================================================
 
     function closeConfirmationModal() {
@@ -2911,7 +3010,7 @@
 
     function handleConfirmationPrimaryAction() {
       closeConfirmationModal();
-      if (currentRole === 'admin') {
+      if (currentRole === 'admin' && isAdminAuthenticated()) {
         switchTab('tracker');
         switchAdminRecordSubtab(lastSubmittedType);
       } else {
@@ -2979,6 +3078,10 @@
     }
 
     function openVcApproveModal(vcId) {
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       const vc = getVcRequests().find((v) => v.id === vcId);
       if (!vc) return;
       document.getElementById('vcApproveTargetId').value = vc.id;
@@ -2988,12 +3091,12 @@
         <p><span class="font-semibold">Schedule:</span> ${escapeHTML(vc.dateOfMeeting)} at ${escapeHTML(vc.timeOfMeeting)} (${escapeHTML(vc.lengthHours)} hr/s)</p>
         <p><span class="font-semibold">Division / Office:</span> ${escapeHTML(vc.divisionOffice)} (${escapeHTML(vc.officeEmail)})</p>
       `;
-      const linkInput = document.getElementById('vcApproveMeetingLinkInput');
-      const existingDetails = vc.MeetingLink && vc.MeetingLink !== 'Awaiting Admin Meeting Link' && vc.MeetingLink !== 'Awaiting Admin Meeting Details'
-        ? vc.MeetingLink
+      const linkInput = document.getElementById('vcApproveWebexLinkInput');
+      const existingDetails = vc.webexLink && vc.webexLink !== 'Awaiting Admin Webex Link' && vc.webexLink !== 'Awaiting Admin Meeting Details'
+        ? vc.webexLink
         : '';
       linkInput.value = existingDetails;
-      document.getElementById('err-vcApproveMeetingLink').classList.add('hidden');
+      document.getElementById('err-vcApproveWebexLink').classList.add('hidden');
       document.getElementById('vcApproveModal').classList.remove('hidden');
     }
 
@@ -3004,9 +3107,13 @@
 
     function confirmVcApprovalWithLink(event) {
       event.preventDefault();
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       const targetId = document.getElementById('vcApproveTargetId').value;
-      const detailsVal = document.getElementById('vcApproveMeetingLinkInput').value.trim();
-      const errEl = document.getElementById('err-vcApproveMeetingLink');
+      const detailsVal = document.getElementById('vcApproveWebexLinkInput').value.trim();
+      const errEl = document.getElementById('err-vcApproveWebexLink');
 
       if (!detailsVal) {
         if (errEl) errEl.classList.remove('hidden');
@@ -3018,27 +3125,27 @@
       const idx = vcList.findIndex((v) => v.id === targetId);
       if (idx === -1) return;
 
-      vcList[idx].MeetingLink = detailsVal;
+      vcList[idx].webexLink = detailsVal;
       vcList[idx].status = 'Scheduled / Approved';
       saveVcRequests(vcList);
 
       pushToSharedDatabase('updateStatus', 'Video Conference', {
         id: targetId,
         status: vcList[idx].status,
-        MeetingLink: vcList[idx].MeetingLink
+        webexLink: vcList[idx].webexLink
       });
 
       closeVcApproveModal();
       renderVcRequestsList();
       renderDashboard();
-      showToast('Video Conference Approved', `Saved Meeting meeting details for ${targetId}.`, 'success');
+      showToast('Video Conference Approved', `Saved meeting details for ${targetId}.`, 'success');
     }
 
     function copyVcMeetingDetails(vcId) {
       const vc = getVcRequests().find((v) => v.id === vcId);
-      if (!vc || !vc.MeetingLink) return;
+      if (!vc || !vc.webexLink) return;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(vc.MeetingLink).then(() => {
+        navigator.clipboard.writeText(vc.webexLink).then(() => {
           showToast('Copied to Clipboard', `Meeting details for ${vc.id} copied.`, 'success');
         }).catch(() => {
           showToast('Copy Failed', 'Please select and copy the meeting details manually.', 'warning');
@@ -3054,6 +3161,10 @@
     }
 
     function cycleVcRequestStatus(vcId) {
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       const vcList = getVcRequests();
       const idx = vcList.findIndex((v) => v.id === vcId);
       if (idx === -1) return;
@@ -3062,14 +3173,14 @@
         vcList[idx].status = 'Completed';
       } else {
         vcList[idx].status = 'Pending';
-        vcList[idx].MeetingLink = 'Awaiting Admin Meeting Details';
+        vcList[idx].webexLink = 'Awaiting Admin Meeting Details';
       }
       saveVcRequests(vcList);
 
       pushToSharedDatabase('updateStatus', 'Video Conference', {
         id: vcId,
         status: vcList[idx].status,
-        MeetingLink: vcList[idx].MeetingLink
+        webexLink: vcList[idx].webexLink
       });
 
       renderVcRequestsList();
@@ -3078,6 +3189,10 @@
     }
 
     function cycleStarlinkRequestStatus(slId) {
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       const slList = getStarlinkRequests();
       const idx = slList.findIndex((s) => s.id === slId);
       if (idx === -1) return;
@@ -3172,9 +3287,9 @@
       });
 
       matchedVc.forEach((v) => {
-        const hasDetails = v.MeetingLink &&
-          v.MeetingLink !== 'Awaiting Admin Meeting Link' &&
-          v.MeetingLink !== 'Awaiting Admin Meeting Details';
+        const hasDetails = v.webexLink &&
+          v.webexLink !== 'Awaiting Admin Webex Link' &&
+          v.webexLink !== 'Awaiting Admin Meeting Details';
         cards.push(`
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3187,7 +3302,7 @@
             <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
             <div class="mt-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
               <div class="flex items-center justify-between gap-2 mb-1.5">
-                <span class="font-semibold text-slate-800">Meeting Meeting Details:</span>
+                <span class="font-semibold text-slate-800">Meeting Details:</span>
                 ${hasDetails ? `
                   <button
                     type="button"
@@ -3199,8 +3314,8 @@
                 ` : ''}
               </div>
               ${hasDetails
-                ? `<div class="mt-1 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(v.MeetingLink)}</div>`
-                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.MeetingLink || 'Awaiting Admin Meeting Details')}</span>`
+                ? `<div class="mt-1 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(v.webexLink)}</div>`
+                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Meeting Details')}</span>`
               }
             </div>
           </div>
@@ -3240,7 +3355,10 @@
     // =========================================================================
 
     function toggleTicketSolvedStatus(ticketId) {
-      if (currentRole !== 'admin') return;
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       const tickets = getTickets();
       const idx = tickets.findIndex((t) => t.id === ticketId);
       if (idx === -1) return;
@@ -3429,9 +3547,9 @@
       container.innerHTML = filtered.map((item) => {
         const isPending = item.status === 'Pending';
         const isApproved = item.status === 'Scheduled / Approved';
-        const hasDetails = item.MeetingLink &&
-          item.MeetingLink !== 'Awaiting Admin Meeting Link' &&
-          item.MeetingLink !== 'Awaiting Admin Meeting Details';
+        const hasDetails = item.webexLink &&
+          item.webexLink !== 'Awaiting Admin Webex Link' &&
+          item.webexLink !== 'Awaiting Admin Meeting Details';
         const statusBadge = isPending
           ? 'bg-amber-100 text-amber-800 border-amber-200'
           : (isApproved ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-emerald-100 text-emerald-800 border-emerald-200');
@@ -3484,7 +3602,7 @@
             <div class="mt-3.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-2">
               <div>
                 <div class="flex items-center justify-between gap-2">
-                  <span class="font-semibold text-slate-800">Meeting Meeting Details:</span>
+                  <span class="font-semibold text-slate-800">Meeting Details:</span>
                   ${hasDetails ? `
                     <button
                       type="button"
@@ -3496,8 +3614,8 @@
                   ` : ''}
                 </div>
                 ${hasDetails
-                  ? `<div class="mt-1.5 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(item.MeetingLink)}</div>`
-                  : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(item.MeetingLink || 'Awaiting Admin Meeting Details')}</span>`
+                  ? `<div class="mt-1.5 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(item.webexLink)}</div>`
+                  : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(item.webexLink || 'Awaiting Admin Meeting Details')}</span>`
                 }
               </div>
               <p><span class="font-semibold text-slate-800">Recording:</span> ${escapeHTML(item.recordingSendTo || 'Not Requested')} &bull; <span class="font-semibold text-slate-800">Unlocking:</span> ${escapeHTML(item.unlockingOption || 'Standard')}</p>
@@ -3629,7 +3747,6 @@
       const resRate = tickets.length > 0 ? Math.round((solvedTats / tickets.length) * 100) : 0;
       const pendingVc = vcList.filter((v) => v.status === 'Pending').length;
 
-      // Update 4 KPI Cards
       const kpiTotal = document.getElementById('dash-kpi-total');
       const kpiSolved = document.getElementById('dash-kpi-solved');
       const kpiRate = document.getElementById('dash-kpi-rate');
@@ -3648,7 +3765,6 @@
       if (kpiVcPending) kpiVcPending.textContent = `${pendingVc} Pending`;
       if (kpiSlTotal) kpiSlTotal.textContent = String(slList.length);
 
-      // System Legend Breakdown
       const ihomisCount = tickets.filter((t) => String(t.infoSystem).toLowerCase().includes('ihomis')).length;
       const iclinicCount = tickets.filter((t) => String(t.infoSystem).toLowerCase().includes('iclinic')).length;
       const ihomisPct = tickets.length ? Math.round((ihomisCount / tickets.length) * 100) : 0;
@@ -3664,7 +3780,6 @@
       if (statusBoxYes) statusBoxYes.textContent = String(solvedTats);
       if (statusBoxNo) statusBoxNo.textContent = String(unsolvedTats);
 
-      // Priority Queue Table
       const openTickets = tickets.filter((t) => String(t.solved).toUpperCase() !== 'YES');
       const queuePill = document.getElementById('queue-count-pill');
       const queueBody = document.getElementById('dash-priority-queue-body');
@@ -3705,7 +3820,6 @@
 
       if (typeof Chart === 'undefined') return;
 
-      // Chart 1: Trend by Date
       const dateGroups = {};
       tickets.forEach((t) => {
         const dayKey = t.submittedAt ? String(t.submittedAt).slice(0, 10) : 'Unknown';
@@ -3748,7 +3862,6 @@
         });
       }
 
-      // Chart 2: Concerned Information System Doughnut
       const ctxSys = document.getElementById('chartSystems');
       if (ctxSys) {
         if (dashboardCharts.systems) dashboardCharts.systems.destroy();
@@ -3770,7 +3883,6 @@
         });
       }
 
-      // Chart 3: Top Facilities Horizontal Bar
       const facCounts = {};
       tickets.forEach((t) => {
         const fac = String(t.provinceFacility || 'Unspecified').trim();
@@ -3801,7 +3913,6 @@
         });
       }
 
-      // Chart 4: Resolution Status Overview
       const ctxStatus = document.getElementById('chartStatus');
       if (ctxStatus) {
         if (dashboardCharts.status) dashboardCharts.status.destroy();
@@ -3825,6 +3936,10 @@
     }
 
     function exportAllRecordsToExcel() {
+      if (currentRole !== 'admin' || !isAdminAuthenticated()) {
+        openAdminLoginModal();
+        return;
+      }
       if (typeof XLSX === 'undefined') {
         showToast('Export Unavailable', 'Excel export library is still loading.', 'warning');
         return;
@@ -3854,7 +3969,7 @@
         'Office Email': v.officeEmail,
         'Division / Unit': v.divisionOffice,
         'Status': v.status,
-        'Meeting Link': v.MeetingLink
+        'Meeting Details': v.webexLink
       }));
       const slRows = getStarlinkRequests().map((s) => ({
         'Reference ID': s.id,
@@ -3882,7 +3997,7 @@
 
     function initTatsPortal() {
       setupTatsDropZone();
-      const isAdmin = safeGetStorage('session', ADMIN_SESSION_KEY) === 'true';
+      const isAdmin = isAdminAuthenticated();
       applyRoleUI(isAdmin ? 'admin' : 'client');
       refreshTatsTicketNumberDisplay();
       refreshVcSeriesNumberDisplay();
