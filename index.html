@@ -1,0 +1,2146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Technical Assistance Ticketing Submission (TATS)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.25s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-teal-100 selection:text-teal-900">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <!-- Brand & Title -->
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center shadow-inner shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">
+                Technical Assistance Ticketing Submission (TATS)
+              </h1>
+              <p id="header-role-subtitle" class="text-xs text-slate-400">
+                Client Support, Video Conference &amp; Starlink Portal
+              </p>
+            </div>
+          </div>
+
+          <!-- Mobile Role Action Button -->
+          <div class="lg:hidden">
+            <button
+              id="mobile-admin-btn"
+              type="button"
+              onclick="openAdminLoginModal()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-teal-400 border border-slate-700 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Admin
+            </button>
+          </div>
+        </div>
+
+        <!-- Navigation & Role Switcher -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+
+          <!-- CLIENT NAVIGATION TABS (Default Visible) -->
+          <nav id="client-nav" class="flex bg-slate-800/90 p-1 rounded-xl border border-slate-700/80 overflow-x-auto" aria-label="Client Tabs">
+            <button
+              id="tab-btn-client-submit"
+              type="button"
+              onclick="switchTab('submit')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all bg-teal-600 text-white shadow-sm whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Technical Assistance (TATS)
+            </button>
+            <button
+              id="tab-btn-client-vc"
+              type="button"
+              onclick="switchTab('vc-request')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Video Conference Request
+            </button>
+            <button
+              id="tab-btn-client-starlink"
+              type="button"
+              onclick="switchTab('starlink-request')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+              </svg>
+              Starlink Borrower
+            </button>
+            <button
+              id="tab-btn-client-status"
+              type="button"
+              onclick="switchTab('client-status')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Track Request Status
+            </button>
+          </nav>
+
+          <!-- ADMIN NAVIGATION TABS (Hidden in Client View) -->
+          <nav id="admin-nav" class="hidden flex bg-slate-800/90 p-1 rounded-xl border border-slate-700/80 overflow-x-auto" aria-label="Admin Tabs">
+            <button
+              id="tab-btn-dashboard"
+              type="button"
+              onclick="switchTab('dashboard')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all bg-teal-600 text-white shadow-sm whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              Analytics Dashboard
+            </button>
+            <button
+              id="tab-btn-tracker"
+              type="button"
+              onclick="switchTab('tracker')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+              </svg>
+              All Records
+              <span id="ticket-count-badge" class="ml-0.5 bg-teal-500 text-slate-950 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+            </button>
+            <button
+              id="tab-btn-admin-submit"
+              type="button"
+              onclick="switchTab('submit')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Submit TATS Ticket
+            </button>
+            <button
+              id="tab-btn-admin-vc"
+              type="button"
+              onclick="switchTab('vc-request')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Video Conf. Request
+            </button>
+            <button
+              id="tab-btn-admin-starlink"
+              type="button"
+              onclick="switchTab('starlink-request')"
+              class="flex items-center justify-center gap-2 px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-300 hover:text-white whitespace-nowrap"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+              </svg>
+              Starlink Borrower
+            </button>
+          </nav>
+
+          <!-- Role Status & Admin Login / Logout Controls -->
+          <div id="client-role-controls" class="hidden lg:flex items-center gap-2">
+            <button
+              type="button"
+              onclick="openAdminLoginModal()"
+              class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-800 hover:bg-slate-700 text-teal-400 border border-slate-700 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Admin Login
+            </button>
+          </div>
+
+          <div id="admin-role-controls" class="hidden flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Admin Mode Active
+            </span>
+            <button
+              type="button"
+              onclick="logoutAdmin()"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-rose-950/70 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-800 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Client View
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 0: ANALYTICS DASHBOARD (ADMIN ONLY)                              -->
+    <!-- ===================================================================== -->
+    <section id="view-dashboard" class="hidden space-y-6 animate-fade-up">
+
+      <!-- Dashboard Top Banner & Quick Actions -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse"></span>
+                Admin Live Operations Overview
+              </span>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-900 mt-1.5">Technical Assistance Analytics Dashboard</h2>
+            <p class="text-sm text-slate-500 mt-0.5">
+              Real-time monitoring of TATS tickets, Video Conference bookings, and Starlink equipment loans.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button
+              type="button"
+              id="btn-sync-shared-db"
+              onclick="syncFromSharedDatabase(true)"
+              class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-xl shadow-xs transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Sync Google Sheets
+            </button>
+            <button
+              type="button"
+              onclick="exportTicketsExcel()"
+              class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-300 rounded-xl shadow-xs transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export Excel (.xlsx)
+            </button>
+            <button
+              type="button"
+              onclick="switchTab('submit')"
+              class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-sm transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Log TATS Ticket
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 KPI Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <!-- KPI 1: Total Tickets -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Tickets Submitted</p>
+              <p id="dash-kpi-total" class="text-3xl font-extrabold text-slate-900 mt-2">0</p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500">All Health Information Systems</span>
+            <span class="font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-md">Active Log</span>
+          </div>
+        </div>
+
+        <!-- KPI 2: Resolved Tickets & Rate -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Resolved (Solved: YES)</p>
+              <div class="flex items-baseline gap-2.5 mt-2">
+                <p id="dash-kpi-solved" class="text-3xl font-extrabold text-emerald-700">0</p>
+                <span id="dash-kpi-rate" class="text-xs font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">0%</span>
+              </div>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100">
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div id="dash-kpi-progress" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3: Pending / Unresolved -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-amber-700">Pending / Unresolved (No)</p>
+              <p id="dash-kpi-open" class="text-3xl font-extrabold text-amber-700 mt-2">0</p>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500">Requires TA Follow-up</span>
+            <button type="button" onclick="scrollToPriorityQueue()" class="font-semibold text-amber-700 hover:underline">
+              View Queue &darr;
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI 4: Video Conf & Starlink Requests -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-blue-700">Video Conf. Requests</p>
+              <div class="flex items-baseline gap-2.5 mt-2">
+                <p id="dash-kpi-vc-total" class="text-3xl font-extrabold text-blue-900">0</p>
+                <span id="dash-kpi-vc-pending" class="text-xs font-bold text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full">0 Pending</span>
+              </div>
+            </div>
+            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500">Webex &amp; Starlink Bookings</span>
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="openAdminVcRecords()" class="font-semibold text-teal-700 hover:underline">VC &rarr;</button>
+              <button type="button" onclick="openAdminStarlinkRecords()" class="font-semibold text-indigo-700 hover:underline">Starlink (<span id="dash-kpi-sl-total">0</span>) &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid Row 1: Submission Trend & Concerned Information System -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Ticket Volume & Resolution Trend -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Ticket Volume &amp; Resolution Trend</h3>
+              <p class="text-xs text-slate-500">Daily TATS submissions compared against resolved tickets</p>
+            </div>
+            <span class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+              By Submission Date
+            </span>
+          </div>
+          <div class="relative h-64 w-full">
+            <canvas id="chartTrend"></canvas>
+          </div>
+        </div>
+
+        <!-- Concerned Information System Breakdown -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Concerned Information System</h3>
+            <p class="text-xs text-slate-500">Distribution across iHOMIS/HBSYS/IHOMIS+ &amp; iClinicSys</p>
+          </div>
+          <div class="relative h-52 w-full my-3">
+            <canvas id="chartSystems"></canvas>
+          </div>
+          <div class="space-y-2 pt-3 border-t border-slate-100 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 font-medium text-slate-700">
+                <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+                iHOMIS, HBSYS, IHOMIS+
+              </span>
+              <span id="legend-ihomis-count" class="font-bold text-slate-900">0 (0%)</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 font-medium text-slate-700">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                iClinicSys
+              </span>
+              <span id="legend-iclinic-count" class="font-bold text-slate-900">0 (0%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid Row 2: Top Facilities & Resolution Status -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Top Reporting Provinces / Facilities -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Top Reporting Provinces / Facilities</h3>
+              <p class="text-xs text-slate-500">Facilities with the highest number of technical assistance requests</p>
+            </div>
+          </div>
+          <div class="relative h-60 w-full">
+            <canvas id="chartFacilities"></canvas>
+          </div>
+        </div>
+
+        <!-- Solved vs Unsolved Status Overview -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Resolution Status Overview</h3>
+            <p class="text-xs text-slate-500">Proportion of Solved (YES) vs Unsolved (No) tickets</p>
+          </div>
+          <div class="relative h-48 w-full my-3">
+            <canvas id="chartStatus"></canvas>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100 text-center text-xs">
+            <div class="bg-emerald-50 rounded-xl p-2.5">
+              <span class="block text-emerald-700 font-semibold">Solved (YES)</span>
+              <span id="status-box-yes" class="text-lg font-extrabold text-emerald-900">0</span>
+            </div>
+            <div class="bg-amber-50 rounded-xl p-2.5">
+              <span class="block text-amber-700 font-semibold">Unsolved (No)</span>
+              <span id="status-box-no" class="text-lg font-extrabold text-amber-900">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority Action Queue: Unresolved Tickets -->
+      <div id="priority-queue-section" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-slate-900">Unresolved Tickets Priority Queue</h3>
+              <span id="queue-count-pill" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full">0 Pending</span>
+            </div>
+            <p class="text-xs text-slate-500 mt-0.5">Open requests requiring remote support via AnyDesk or technical intervention.</p>
+          </div>
+          <button
+            type="button"
+            onclick="switchTab('tracker')"
+            class="text-xs font-semibold text-teal-700 hover:text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-3.5 py-2 rounded-xl transition-colors self-start sm:self-auto"
+          >
+            View All Tickets &rarr;
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <th class="py-3 px-6">Ticket ID</th>
+                <th class="py-3 px-6">Province / Facility</th>
+                <th class="py-3 px-6">System</th>
+                <th class="py-3 px-6">AnyDesk ID</th>
+                <th class="py-3 px-6 text-right">Quick Action</th>
+              </tr>
+            </thead>
+            <tbody id="dash-priority-queue-body" class="divide-y divide-slate-100 text-sm">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1: TATS FORM SUBMISSION (CLIENT & ADMIN)                         -->
+    <!-- ===================================================================== -->
+    <section id="view-submit" class="max-w-3xl mx-auto space-y-6">
+
+      <!-- Form Banner & Data Privacy Act Notice Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2.5 bg-gradient-to-r from-teal-600 via-cyan-600 to-slate-800"></div>
+        <div class="p-6 sm:p-8">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h2 class="text-2xl font-bold text-slate-900">Technical Assistance Ticketing Submission (TATS)</h2>
+            <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+              * Indicates required question
+            </span>
+          </div>
+
+          <!-- Data Privacy Act of 2012 Notice Box -->
+          <div class="mt-4 bg-slate-50 border-l-4 border-teal-600 rounded-r-xl p-4 sm:p-5 text-sm text-slate-700 leading-relaxed">
+            <div class="flex items-center gap-2 font-semibold text-slate-900 mb-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>Data Privacy Act of 2012 Consent</span>
+            </div>
+            <p class="text-slate-600">
+              Pursuant to the requirements of the Data Privacy Act of 2012, we would like to secure your consent on the collection, processing, storage, and usage of the personal information obtained from this form. The TATS provider is committed in ensuring the confidentiality of the information that you provided in this form and that all data will be used and processed in accordance with existing laws. By signing this, you accept and authorizes to process this information. This includes the certification that all of the information provided is true and correct.
+            </p>
+
+            <!-- Consent Confirmation Checkbox -->
+            <div class="mt-4 pt-3 border-t border-slate-200">
+              <label for="privacyConsent" class="flex items-start gap-3 cursor-pointer select-none group">
+                <input
+                  type="checkbox"
+                  id="privacyConsent"
+                  name="privacyConsent"
+                  class="mt-1 w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="text-sm font-medium text-slate-800 group-hover:text-slate-900">
+                  I accept and authorize the processing of this information and certify that all provided details are true and correct. <span class="text-rose-600 font-bold">*</span>
+                </span>
+              </label>
+              <p id="err-privacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                Please check the Data Privacy Consent box before submitting your ticket.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main TATS Form -->
+      <form id="tatsForm" onsubmit="handleTatsFormSubmit(event)" novalidate class="space-y-5">
+
+        <!-- 1. Email * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="email" class="block text-base font-semibold text-slate-900">
+            1. Email <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Active email address where ticket updates will be sent.</p>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="your.name@facility.gov.ph"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-email" class="hidden text-xs font-medium text-rose-600 mt-2">Please enter a valid email address.</p>
+        </div>
+
+        <!-- 2. Full Name * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="fullName" class="block text-base font-semibold text-slate-900">
+            2. Full Name <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">First Name, Middle Initial, Last Name</p>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            required
+            placeholder="e.g., Juan A. Dela Cruz"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-fullName" class="hidden text-xs font-medium text-rose-600 mt-2">Full Name is required.</p>
+        </div>
+
+        <!-- 3. Province/Facility * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="provinceFacility" class="block text-base font-semibold text-slate-900">
+            3. Province/Facility <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Specify your Province and Hospital, RHU, or Health Facility name.</p>
+          <input
+            type="text"
+            id="provinceFacility"
+            name="provinceFacility"
+            required
+            placeholder="e.g., Batangas / RHU I - San Luis"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-provinceFacility" class="hidden text-xs font-medium text-rose-600 mt-2">Province/Facility is required.</p>
+        </div>
+
+        <!-- 4. Concerned Information System (Mark only one oval) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <fieldset>
+            <legend class="block text-base font-semibold text-slate-900">
+              4. Concerned Information System
+            </legend>
+            <p class="text-xs text-slate-500 mt-0.5 mb-4">Mark only one option.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Option 1: iHOMIS, HBSYS, IHOMIS+ -->
+              <label class="relative flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/60 has-[:checked]:ring-2 has-[:checked]:ring-teal-500/20">
+                <input
+                  type="radio"
+                  name="infoSystem"
+                  value="iHOMIS, HBSYS, IHOMIS+"
+                  checked
+                  class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer"
+                />
+                <div>
+                  <span class="block text-sm font-semibold text-slate-900">iHOMIS, HBSYS, IHOMIS+</span>
+                  <span class="block text-xs text-slate-500">Hospital Operations &amp; Management</span>
+                </div>
+              </label>
+
+              <!-- Option 2: iClinicSys -->
+              <label class="relative flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/60 has-[:checked]:ring-2 has-[:checked]:ring-teal-500/20">
+                <input
+                  type="radio"
+                  name="infoSystem"
+                  value="iClinicSys"
+                  class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer"
+                />
+                <div>
+                  <span class="block text-sm font-semibold text-slate-900">iClinicSys</span>
+                  <span class="block text-xs text-slate-500">Integrated Clinic Information System</span>
+                </div>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- 5. Error/Problem Encountered * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <label for="errorDescription" class="block text-base font-semibold text-slate-900">
+            5. Error/Problem Encountered <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Describe the exact error message, affected module, and steps to reproduce the issue.</p>
+          <textarea
+            id="errorDescription"
+            name="errorDescription"
+            rows="4"
+            required
+            placeholder="Provide detailed information about the technical issue..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          ></textarea>
+          <p id="err-errorDescription" class="hidden text-xs font-medium text-rose-600 mt-2">Please describe the error or problem encountered.</p>
+        </div>
+
+        <!-- 6. Screenshot or Picture of the Error/Problem * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <label class="block text-base font-semibold text-slate-900">
+            6. Screenshot or Picture of the Error/ Problem <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Attach a clear screenshot or photo of the error screen (PNG, JPG, WEBP, or PDF up to 10MB).</p>
+
+          <!-- Drag & Drop Zone -->
+          <div
+            id="dropZone"
+            class="border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50/60 hover:bg-teal-50/30"
+          >
+            <input
+              type="file"
+              id="screenshotInput"
+              accept="image/*,.pdf"
+              class="hidden"
+            />
+            <div class="mx-auto w-12 h-12 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center mb-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+            </div>
+            <p class="text-sm font-semibold text-slate-800">
+              Click to upload or drag and drop file here
+            </p>
+            <p class="text-xs text-slate-500 mt-1">
+              Supports PNG, JPG, JPEG, WEBP, or PDF (Max 10MB)
+            </p>
+          </div>
+
+          <!-- Uploaded File Preview Card -->
+          <div id="filePreviewCard" class="hidden mt-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="previewImage" src="" alt="Error Screenshot Preview" class="hidden w-16 h-16 object-cover rounded-lg border border-slate-300 shrink-0" />
+                <div id="previewPdfIcon" class="hidden w-12 h-12 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0">
+                  PDF
+                </div>
+                <div class="min-w-0">
+                  <p id="previewFileName" class="text-sm font-semibold text-slate-900 truncate"></p>
+                  <p id="previewFileMeta" class="text-xs text-slate-500"></p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onclick="clearAttachment()"
+                class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors shrink-0"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+
+          <p id="err-screenshot" class="hidden text-xs font-medium text-rose-600 mt-2">
+            Please attach a screenshot or picture of the error/problem.
+          </p>
+        </div>
+
+        <!-- 7. AnyDesk Address -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
+          <div class="flex items-center justify-between">
+            <label for="anydeskAddress" class="block text-base font-semibold text-slate-900">
+              7. AnyDesk Address
+            </label>
+            <span class="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Optional</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Provide your 9- or 10-digit AnyDesk ID if remote desktop troubleshooting is needed.</p>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-rose-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="anydeskAddress"
+              name="anydeskAddress"
+              inputmode="numeric"
+              placeholder="e.g., 123 456 789"
+              class="w-full rounded-xl border border-slate-300 pl-11 pr-4 py-2.5 text-sm font-mono text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+            />
+          </div>
+        </div>
+
+        <!-- 8. Solved? * (Check all that apply) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <fieldset>
+            <legend class="block text-base font-semibold text-slate-900">
+              8. Solved? <span class="text-rose-600">*</span>
+            </legend>
+            <p class="text-xs text-slate-500 mt-0.5 mb-4">Indicate whether the issue was already resolved or still requires assistance.</p>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <label class="flex-1 flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/70">
+                <input
+                  type="checkbox"
+                  id="solvedNo"
+                  name="solvedStatus"
+                  value="No"
+                  checked
+                  onchange="handleSolvedCheckbox('No')"
+                  class="w-4 h-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
+                />
+                <span class="text-sm font-semibold text-slate-800">No</span>
+                <span class="ml-auto text-xs text-slate-500">Needs TA Support</span>
+              </label>
+
+              <label class="flex-1 flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70">
+                <input
+                  type="checkbox"
+                  id="solvedYes"
+                  name="solvedStatus"
+                  value="YES"
+                  onchange="handleSolvedCheckbox('YES')"
+                  class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                />
+                <span class="text-sm font-semibold text-slate-800">YES</span>
+                <span class="ml-auto text-xs text-slate-500">Resolved / For Logging</span>
+              </label>
+            </div>
+            <p id="err-solved" class="hidden text-xs font-medium text-rose-600 mt-2">Please select either YES or No.</p>
+          </fieldset>
+        </div>
+
+        <!-- Form Action Buttons -->
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-2 pb-6">
+          <button
+            type="button"
+            onclick="resetTatsForm()"
+            class="w-full sm:w-auto px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 rounded-xl transition-colors"
+          >
+            Clear Form
+          </button>
+
+          <button
+            type="submit"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            Submit TATS Ticket
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1A: ADD NEW REQUEST FOR VIDEO CONFERENCE MEETING                 -->
+    <!-- ===================================================================== -->
+    <section id="view-vc-request" class="hidden max-w-6xl mx-auto space-y-6">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <!-- Top Form Header -->
+        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+          <h2 class="text-base sm:text-lg font-bold text-blue-600">
+            Add New Request for Video Conference Meeting
+          </h2>
+          <span class="text-xs font-medium text-slate-500">Webex Meeting Scheduling</span>
+        </div>
+
+        <form id="vcRequestForm" onsubmit="handleVcRequestSubmit(event)" novalidate class="p-6 space-y-5">
+          <!-- Row 1: Series Number -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-100/90 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="block text-[11px] font-medium text-slate-500">Series Number</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
+                    Auto-Increment
+                  </span>
+                </div>
+                <span id="vcSeriesNumberDisplay" class="block text-base font-bold text-slate-900 mt-0.5">614</span>
+                <input type="hidden" id="vcSeriesNumber" name="vcSeriesNumber" value="614" />
+              </div>
+              <span class="text-xs font-mono text-slate-400">System Assigned</span>
+            </div>
+          </div>
+
+          <!-- Row 2: Title of Meeting | Date | Time | Length (Hours) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div class="lg:col-span-6">
+              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcTitle" class="block text-[11px] font-medium text-slate-500">
+                  Title of Meeting <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="vcTitle"
+                  name="vcTitle"
+                  required
+                  placeholder="Enter official title of the meeting"
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcTitle" class="hidden text-xs font-medium text-rose-600 mt-1">Title of Meeting is required.</p>
+            </div>
+
+            <div class="lg:col-span-2">
+              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcDate" class="block text-[11px] font-medium text-slate-500">
+                  Date of Meeting <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="vcDate"
+                  name="vcDate"
+                  required
+                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcDate" class="hidden text-xs font-medium text-rose-600 mt-1">Date is required.</p>
+            </div>
+
+            <div class="lg:col-span-2">
+              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcTime" class="block text-[11px] font-medium text-slate-500">
+                  Time of Meeting <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="time"
+                  id="vcTime"
+                  name="vcTime"
+                  required
+                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcTime" class="hidden text-xs font-medium text-rose-600 mt-1">Time is required.</p>
+            </div>
+
+            <div class="lg:col-span-2">
+              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcLength" class="block text-[11px] font-medium text-slate-500">
+                  Length of Meeting (Hours) <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="vcLength"
+                  name="vcLength"
+                  min="0.5"
+                  max="24"
+                  step="0.5"
+                  required
+                  placeholder="e.g., 2"
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcLength" class="hidden text-xs font-medium text-rose-600 mt-1">Hours required.</p>
+            </div>
+          </div>
+
+          <!-- Row 3: Email Address/es of Participants | Names of Host and Co-Host -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcParticipants" class="block text-[11px] font-medium text-slate-500">
+                  Email Address/es of Participants <span class="text-rose-600">*</span>
+                </label>
+                <textarea
+                  id="vcParticipants"
+                  name="vcParticipants"
+                  rows="2"
+                  required
+                  placeholder="Separate multiple email addresses with commas"
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5 resize-y"
+                ></textarea>
+              </div>
+              <p id="err-vcParticipants" class="hidden text-xs font-medium text-rose-600 mt-1">Please enter participant email address/es.</p>
+            </div>
+
+            <div>
+              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 h-full flex flex-col justify-center focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcHostCoHost" class="block text-[11px] font-medium text-slate-500">
+                  Names of Host and Co-Host <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="vcHostCoHost"
+                  name="vcHostCoHost"
+                  required
+                  placeholder="e.g., Host: Juan Dela Cruz / Co-Host: Maria Santos"
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcHostCoHost" class="hidden text-xs font-medium text-rose-600 mt-1">Names of Host and Co-Host are required.</p>
+            </div>
+          </div>
+
+          <!-- Row 4: Office Email Address | Division/Program/Unit -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div>
+              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcOfficeEmail" class="block text-[11px] font-medium text-slate-500">
+                  Office Email Address <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="vcOfficeEmail"
+                  name="vcOfficeEmail"
+                  required
+                  placeholder="office.unit@doh.gov.ph"
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
+                />
+              </div>
+              <p id="err-vcOfficeEmail" class="hidden text-xs font-medium text-rose-600 mt-1">Valid Office Email Address is required.</p>
+            </div>
+
+            <div>
+              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcDivision" class="block text-[11px] font-medium text-slate-500">
+                  Division/Program/Unit <span class="text-rose-600">*</span>
+                </label>
+                <select
+                  id="vcDivision"
+                  name="vcDivision"
+                  required
+                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5 cursor-pointer"
+                >
+                  <option value="">Choose Program/Unit...</option>
+                  <option value="UNIVERSAL HEALTH CARE (UHC)">UNIVERSAL HEALTH CARE (UHC)</option>
+                  <option value="Infectious Diseases Cluster (IDC)">Infectious Diseases Cluster (IDC)</option>
+                  <option value="Philippine Business for Social Progress (PBSP)">Philippine Business for Social Progress (PBSP)</option>
+                  <option value="HEALTH EDUCATION AND PROMOTION UNIT (HEPU)">HEALTH EDUCATION AND PROMOTION UNIT (HEPU)</option>
+                  <option value="HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)">HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)</option>
+                  <option value="Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU">Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU</option>
+                  <option value="VECTOR BORNE">VECTOR BORNE</option>
+                  <option value="Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)">Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)</option>
+                  <option value="Integrated Non-Communicable Disease Program Cluster (INCDPC)">Integrated Non-Communicable Disease Program Cluster (INCDPC)</option>
+                  <option value="Environmental and Occupational Health Cluster (EOHC)">Environmental and Occupational Health Cluster (EOHC)</option>
+                  <option value="FAMILY HEALTH CARE (FHC)">FAMILY HEALTH CARE (FHC)</option>
+                  <option value="HUMAN RESOURCES FOR HEALTH (HRH)">HUMAN RESOURCES FOR HEALTH (HRH)</option>
+                  <option value="Information and Communications Technology Unit (ICTU)">Information and Communications Technology Unit (ICTU)</option>
+                  <option value="ADMINISTRATIVE SECTION">ADMINISTRATIVE SECTION</option>
+                </select>
+              </div>
+              <p id="err-vcDivision" class="hidden text-xs font-medium text-rose-600 mt-1">Please select a Division/Program/Unit.</p>
+            </div>
+          </div>
+
+          <!-- Row 5: Webex Options, Unlocking of Meeting & Remarks -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start pt-1">
+            <div class="space-y-4">
+              <!-- Webex Options -->
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <span class="text-sm text-slate-700 font-medium min-w-[145px]">Webex options:</span>
+                <div class="flex-1 space-y-2">
+                  <button
+                    type="button"
+                    id="vcRecordingToggleBtn"
+                    onclick="toggleVcRecordingOption()"
+                    class="px-4 py-2 text-xs sm:text-sm font-medium rounded-md border border-blue-400 text-blue-600 bg-white hover:bg-blue-50 transition-all"
+                  >
+                    Recording sends to (email address)
+                  </button>
+                  <input type="hidden" id="vcRecordingOptionValue" value="None" />
+                  <div id="vcRecordingEmailWrap" class="hidden">
+                    <input
+                      type="email"
+                      id="vcRecordingEmail"
+                      placeholder="Enter recipient email for Webex recording..."
+                      class="w-full rounded-lg border border-blue-300 px-3 py-1.5 text-xs sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Unlocking of Meeting -->
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <span class="text-sm text-slate-700 font-medium min-w-[145px]">Unlocking of Meeting:</span>
+                <div class="inline-flex flex-wrap gap-1.5" role="group" aria-label="Unlocking of Meeting">
+                  <button
+                    type="button"
+                    id="vcUnlockGuestBtn"
+                    onclick="selectVcUnlockingOption('Guest can join the meeting')"
+                    class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-md border border-slate-300 bg-white text-slate-500 hover:text-slate-800 transition-all"
+                  >
+                    Guest can join the meeting
+                  </button>
+                  <button
+                    type="button"
+                    id="vcUnlockLobbyBtn"
+                    onclick="selectVcUnlockingOption('Guests wait in the lobby until the host admits them')"
+                    class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-md border-2 border-slate-800 bg-white text-slate-900 shadow-xs transition-all"
+                  >
+                    Guests wait in the lobby until the host admits them
+                  </button>
+                  <input type="hidden" id="vcUnlockingOption" value="Guests wait in the lobby until the host admits them" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Remarks -->
+            <div>
+              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
+                <label for="vcRemarks" class="block text-[11px] font-medium text-slate-500">
+                  Remarks
+                </label>
+                <textarea
+                  id="vcRemarks"
+                  name="vcRemarks"
+                  rows="3"
+                  placeholder="Optional instructions, breakout room requests, or technical notes..."
+                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5 resize-y"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Action Buttons -->
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100">
+            <button
+              type="button"
+              onclick="resetVcRequestForm()"
+              class="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+            >
+              Clear Form
+            </button>
+            <button
+              type="submit"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md transition-all"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Submit Video Conference Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1A-2: STARLINK BORROWER FORM                                     -->
+    <!-- ===================================================================== -->
+    <section id="view-starlink-request" class="hidden max-w-3xl mx-auto space-y-6">
+
+      <!-- Banner & Data Privacy Act of 2012 Notice Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2.5 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600"></div>
+        <div class="p-6 sm:p-8">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-slate-900">STARLINK BORROWER FORM</h2>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="slReferenceBadge" class="font-mono text-xs font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
+                Next Ref: SL-2026-003
+              </span>
+              <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+                * Indicates required question
+              </span>
+            </div>
+          </div>
+
+          <!-- Data Privacy Act Notice Box -->
+          <div class="mt-4 bg-slate-50 border-l-4 border-indigo-600 rounded-r-xl p-4 sm:p-5 text-sm text-slate-700 leading-relaxed">
+            <div class="flex items-center gap-2 font-semibold text-slate-900 mb-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>Data Privacy Act of 2012 Notice &amp; Consent</span>
+            </div>
+            <p class="text-slate-600">
+              Pursuant to the requirements of the Data Privacy Act of 2012, we would like to secure your consent on the collection, processing, storage, and usage of the personal information obtained from this form. The provider is committed in ensuring the confidentiality of the information that you provided in this form and that all data will be used and processed in accordance with existing laws. By answering this form, you accept and authorizes to process this information. This includes the certification that all of the information provided is true and correct.
+            </p>
+
+            <div class="mt-4 pt-3 border-t border-slate-200">
+              <label for="slPrivacyConsent" class="flex items-start gap-3 cursor-pointer select-none group">
+                <input
+                  type="checkbox"
+                  id="slPrivacyConsent"
+                  name="slPrivacyConsent"
+                  class="mt-1 w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                />
+                <span class="text-sm font-medium text-slate-800 group-hover:text-slate-900">
+                  I accept and authorize the processing of this information and certify that all details provided are true and correct. <span class="text-rose-600 font-bold">*</span>
+                </span>
+              </label>
+              <p id="err-slPrivacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+                Please check the Data Privacy Consent box before submitting.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Starlink Borrower Form Fields -->
+      <form id="starlinkForm" onsubmit="handleStarlinkFormSubmit(event)" novalidate class="space-y-5">
+
+        <!-- 1. Email * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slEmail" class="block text-base font-semibold text-slate-900">
+            1. Email <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Primary email address of the borrower.</p>
+          <input
+            type="email"
+            id="slEmail"
+            name="slEmail"
+            required
+            placeholder="your.email@doh.gov.ph"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          />
+          <p id="err-slEmail" class="hidden text-xs font-medium text-rose-600 mt-2">Please enter a valid primary email address.</p>
+        </div>
+
+        <!-- 2. Name of the Borrower * (Dropdown) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slBorrowerName" class="block text-base font-semibold text-slate-900">
+            2. Name of the Borrower <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Select the authorized borrower from the dropdown list.</p>
+          <select
+            id="slBorrowerName"
+            name="slBorrowerName"
+            required
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 bg-white focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          >
+            <option value="">Choose Name of the Borrower...</option>
+            <option value="Rachel Rowena R. Garcia, MD, MPH, MDM">Rachel Rowena R. Garcia, MD, MPH, MDM</option>
+            <option value="Mr. Delbert M. Madrigal, RN, MPM-HSD">Mr. Delbert M. Madrigal, RN, MPM-HSD</option>
+            <option value="Ms. Sharisse T. Vitto, RN">Ms. Sharisse T. Vitto, RN</option>
+            <option value="Mr. Arjil F. Madriño, LPT">Mr. Arjil F. Madriño, LPT</option>
+            <option value="Ms. Laarni L. Mayamaya, RN">Ms. Laarni L. Mayamaya, RN</option>
+            <option value="Ms. Odessa S. Sajo, RM">Ms. Odessa S. Sajo, RM</option>
+            <option value="Mr. Gian Rae M. Maat">Mr. Gian Rae M. Maat</option>
+            <option value="Ms. Hanna Belle R. Marquez">Ms. Hanna Belle R. Marquez</option>
+            <option value="Ms. Apphia M. Monleon, RSW">Ms. Apphia M. Monleon, RSW</option>
+            <option value="Mr. Marvin Glenn A. Canay">Mr. Marvin Glenn A. Canay</option>
+            <option value="Ms. Angelou Jhoy B. Mabato">Ms. Angelou Jhoy B. Mabato</option>
+            <option value="Mr. Glenn L. Regencia">Mr. Glenn L. Regencia</option>
+            <option value="Mr. Mark Julius L. Cadag, RSW">Mr. Mark Julius L. Cadag, RSW</option>
+            <option value="Ms. Guiamela S. Magculang, RN">Ms. Guiamela S. Magculang, RN</option>
+            <option value="Ms. Mary Asther Sadia, RN">Ms. Mary Asther Sadia, RN</option>
+            <option value="Mr. Claude Ivan F. Flores, RN">Mr. Claude Ivan F. Flores, RN</option>
+            <option value="MS. Shyrlyn L. Luci">MS. Shyrlyn L. Luci</option>
+            <option value="Mr. Daryl V. Quitoriano">Mr. Daryl V. Quitoriano</option>
+            <option value="Mr. Ralph Ian S. Malvar">Mr. Ralph Ian S. Malvar</option>
+            <option value="Ms. Quennie Ann S. Merencillo">Ms. Quennie Ann S. Merencillo</option>
+            <option value="Ms. Mary Pauline M. Mariposque, RPh">Ms. Mary Pauline M. Mariposque, RPh</option>
+            <option value="Mr. Gilbert Pryce L. Manrique, RND">Mr. Gilbert Pryce L. Manrique, RND</option>
+            <option value="Ms. Mica Fate P. Loreno, RND">Ms. Mica Fate P. Loreno, RND</option>
+            <option value="Ms. Lorena A. Deloria, PTRP">Ms. Lorena A. Deloria, PTRP</option>
+            <option value="Mr. Ian L. Montenegro">Mr. Ian L. Montenegro</option>
+            <option value="Mr. John Carlo J. Sto. Domingo, LPT, CHRA">Mr. John Carlo J. Sto. Domingo, LPT, CHRA</option>
+            <option value="Ms. Veronica Irish M. Justiniane, LPT">Ms. Veronica Irish M. Justiniane, LPT</option>
+            <option value="Ms. Justine Mae E. Llamas">Ms. Justine Mae E. Llamas</option>
+            <option value="Mr. Henry M. Sarino">Mr. Henry M. Sarino</option>
+            <option value="Mr. Melvin D. Carmona">Mr. Melvin D. Carmona</option>
+            <option value="Mr. Leonell M. Leynes">Mr. Leonell M. Leynes</option>
+            <option value="Mr. Junie Joshua M. Bernales">Mr. Junie Joshua M. Bernales</option>
+          </select>
+          <p id="err-slBorrowerName" class="hidden text-xs font-medium text-rose-600 mt-2">Please select the Name of the Borrower.</p>
+        </div>
+
+        <!-- 3. Position * (Dropdown) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slPosition" class="block text-base font-semibold text-slate-900">
+            3. Position <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Select your official position / designation.</p>
+          <select
+            id="slPosition"
+            name="slPosition"
+            required
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 bg-white focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          >
+            <option value="">Choose Position...</option>
+            <option value="Development Management Officer V">Development Management Officer V</option>
+            <option value="DOH Representative">DOH Representative</option>
+            <option value="Development Management Officer III">Development Management Officer III</option>
+            <option value="Project Development Officer II">Project Development Officer II</option>
+            <option value="Project Development Officer I">Project Development Officer I</option>
+            <option value="Project Associate">Project Associate</option>
+            <option value="Information Officer II">Information Officer II</option>
+            <option value="Health Program Officer II">Health Program Officer II</option>
+            <option value="Health Program Officer I">Health Program Officer I</option>
+            <option value="Administrative Aide I">Administrative Aide I</option>
+            <option value="Administrative Officer I">Administrative Officer I</option>
+            <option value="Administrative Aide III">Administrative Aide III</option>
+            <option value="Social Welfare Assistant">Social Welfare Assistant</option>
+            <option value="Pharmacist II">Pharmacist II</option>
+            <option value="Nutritionist - Dietitian II">Nutritionist - Dietitian II</option>
+            <option value="Physical Therapist II">Physical Therapist II</option>
+            <option value="Computer Programmer II">Computer Programmer II</option>
+            <option value="Administrative Assistant II">Administrative Assistant II</option>
+            <option value="Administrative Aide IV">Administrative Aide IV</option>
+            <option value="Administrative Aide II">Administrative Aide II</option>
+          </select>
+          <p id="err-slPosition" class="hidden text-xs font-medium text-rose-600 mt-2">Please select your Position.</p>
+        </div>
+
+        <!-- 4. Program/Unit * (Dropdown) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slProgramUnit" class="block text-base font-semibold text-slate-900">
+            4. Program/Unit <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Select your requesting program, cluster, or unit.</p>
+          <select
+            id="slProgramUnit"
+            name="slProgramUnit"
+            required
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 bg-white focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          >
+            <option value="">Choose Program/Unit...</option>
+            <option value="UNIVERSAL HEALTH CARE (UHC)">UNIVERSAL HEALTH CARE (UHC)</option>
+            <option value="Infectious Diseases Cluster (IDC)">Infectious Diseases Cluster (IDC)</option>
+            <option value="Philippine Business for Social Progress (PBSP)">Philippine Business for Social Progress (PBSP)</option>
+            <option value="HEALTH EDUCATION AND PROMOTION UNIT (HEPU)">HEALTH EDUCATION AND PROMOTION UNIT (HEPU)</option>
+            <option value="HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)">HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)</option>
+            <option value="Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU">Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU</option>
+            <option value="VECTOR BORNE">VECTOR BORNE</option>
+            <option value="Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)">Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)</option>
+            <option value="Integrated Non-Communicable Disease Program Cluster (INCDPC)">Integrated Non-Communicable Disease Program Cluster (INCDPC)</option>
+            <option value="Environmental and Occupational Health Cluster (EOHC)">Environmental and Occupational Health Cluster (EOHC)</option>
+            <option value="FAMILY HEALTH CARE (FHC)">FAMILY HEALTH CARE (FHC)</option>
+            <option value="HUMAN RESOURCES FOR HEALTH (HRH)">HUMAN RESOURCES FOR HEALTH (HRH)</option>
+            <option value="Information and Communications Technology Unit (ICTU)">Information and Communications Technology Unit (ICTU)</option>
+            <option value="ADMINISTRATIVE SECTION">ADMINISTRATIVE SECTION</option>
+          </select>
+          <p id="err-slProgramUnit" class="hidden text-xs font-medium text-rose-600 mt-2">Please select a Program/Unit.</p>
+        </div>
+
+        <!-- 5 & 6. Reservation Dates (Start & End of the Activity) * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="slResStartDate" class="block text-base font-semibold text-slate-900">
+                5. Reservation Date (Start of the Activity) <span class="text-rose-600">*</span>
+              </label>
+              <p class="text-xs text-slate-500 mt-0.5 mb-3">Example: January 7, 2026</p>
+              <input
+                type="date"
+                id="slResStartDate"
+                name="slResStartDate"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <p id="err-slResStartDate" class="hidden text-xs font-medium text-rose-600 mt-2">Reservation start date is required.</p>
+            </div>
+
+            <div>
+              <label for="slResEndDate" class="block text-base font-semibold text-slate-900">
+                6. Reservation Date (End of the Activity) <span class="text-rose-600">*</span>
+              </label>
+              <p class="text-xs text-slate-500 mt-0.5 mb-3">Example: January 7, 2026</p>
+              <input
+                type="date"
+                id="slResEndDate"
+                name="slResEndDate"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <p id="err-slResEndDate" class="hidden text-xs font-medium text-rose-600 mt-2">Reservation end date is required.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 & 8. Date Borrowed & Date Returned * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="slDateBorrowed" class="block text-base font-semibold text-slate-900">
+                7. Date Borrowed <span class="text-rose-600">*</span>
+              </label>
+              <p class="text-xs text-slate-500 mt-0.5 mb-3">Scheduled pickup/release date of Starlink unit.</p>
+              <input
+                type="date"
+                id="slDateBorrowed"
+                name="slDateBorrowed"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <p id="err-slDateBorrowed" class="hidden text-xs font-medium text-rose-600 mt-2">Date Borrowed is required.</p>
+            </div>
+
+            <div>
+              <label for="slDateReturned" class="block text-base font-semibold text-slate-900">
+                8. Date Returned <span class="text-rose-600">*</span>
+              </label>
+              <p class="text-xs text-slate-500 mt-0.5 mb-3">Expected return date of Starlink unit to ICTU.</p>
+              <input
+                type="date"
+                id="slDateReturned"
+                name="slDateReturned"
+                required
+                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              />
+              <p id="err-slDateReturned" class="hidden text-xs font-medium text-rose-600 mt-2">Date Returned is required.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Title of the Activity * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slActivityTitle" class="block text-base font-semibold text-slate-900">
+            9. Title of the Activity <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Official name of the outreach, field monitoring, or health activity.</p>
+          <input
+            type="text"
+            id="slActivityTitle"
+            name="slActivityTitle"
+            required
+            placeholder="e.g., GIDA Medical Mission &amp; iClinicSys Field Deployment"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          />
+          <p id="err-slActivityTitle" class="hidden text-xs font-medium text-rose-600 mt-2">Title of the Activity is required.</p>
+        </div>
+
+        <!-- 10. Location of the Activity * -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <label for="slActivityLocation" class="block text-base font-semibold text-slate-900">
+            10. Location of the Activity <span class="text-rose-600">*</span>
+          </label>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Municipality, Province, Barangay, or Health Facility venue.</p>
+          <input
+            type="text"
+            id="slActivityLocation"
+            name="slActivityLocation"
+            required
+            placeholder="e.g., Barangay San Isidro, Tingloy, Batangas"
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          />
+          <p id="err-slActivityLocation" class="hidden text-xs font-medium text-rose-600 mt-2">Location of the Activity is required.</p>
+        </div>
+
+        <!-- 11. Remarks (Optional) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/10">
+          <div class="flex items-center justify-between">
+            <label for="slRemarks" class="block text-base font-semibold text-slate-900">
+              11. Remarks
+            </label>
+            <span class="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Optional</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5 mb-3">Specify power station accessories needed, kit number preference, or special notes.</p>
+          <textarea
+            id="slRemarks"
+            name="slRemarks"
+            rows="3"
+            placeholder="Additional notes or equipment accessories requested..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+          ></textarea>
+        </div>
+
+        <!-- Form Action Buttons -->
+        <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-2 pb-6">
+          <button
+            type="button"
+            onclick="resetStarlinkForm()"
+            class="w-full sm:w-auto px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 rounded-xl transition-colors"
+          >
+            Clear Form
+          </button>
+
+          <button
+            type="submit"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-xl shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+            </svg>
+            Submit Starlink Borrower Request
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 1B: CLIENT SELF-SERVICE STATUS TRACKER                           -->
+    <!-- ===================================================================== -->
+    <section id="view-client-status" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="h-2 bg-gradient-to-r from-teal-600 to-cyan-600"></div>
+        <div class="p-6 sm:p-8">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full">
+                Client Self-Service Portal
+              </span>
+              <h2 class="text-2xl font-bold text-slate-900 mt-2">Track My Request Status</h2>
+              <p class="text-sm text-slate-500 mt-1">
+                Enter your <strong>TATS Ticket Reference</strong> (<span class="font-mono text-slate-700">TATS-2026-1042</span>), <strong>Video Conference Series</strong> (<span class="font-mono text-slate-700">VC-612</span>), <strong>Starlink Reference</strong> (<span class="font-mono text-slate-700">SL-2026-001</span>), or <strong>Registered Email Address</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- Search Input Form -->
+          <form id="clientLookupForm" onsubmit="handleClientStatusLookup(event)" class="mt-6">
+            <label for="clientLookupInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
+              Ticket Reference, Series Number, Starlink Ref, or Email Address
+            </label>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <div class="relative flex-1">
+                <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="clientLookupInput"
+                  placeholder="e.g., TATS-2026-1042, VC-612, SL-2026-001, or email"
+                  class="w-full rounded-xl border border-slate-300 pl-11 pr-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+                />
+              </div>
+              <button
+                type="submit"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl shadow-sm transition-colors shrink-0"
+              >
+                Check Status
+              </button>
+            </div>
+          </form>
+
+          <!-- Quick Sample Lookup Chips -->
+          <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+            <span class="text-slate-500 font-medium">Quick test lookup:</span>
+            <button
+              type="button"
+              onclick="quickClientLookup('TATS-2026-1042')"
+              class="font-mono font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200 px-2.5 py-1 rounded-lg transition-colors"
+            >
+              TATS-2026-1042
+            </button>
+            <button
+              type="button"
+              onclick="quickClientLookup('VC-612')"
+              class="font-mono font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-2.5 py-1 rounded-lg transition-colors"
+            >
+              VC-612 (Video Conf)
+            </button>
+            <button
+              type="button"
+              onclick="quickClientLookup('SL-2026-001')"
+              class="font-mono font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 px-2.5 py-1 rounded-lg transition-colors"
+            >
+              SL-2026-001 (Starlink)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Status Search Results Container -->
+      <div id="clientLookupResults" class="space-y-4">
+        <div class="bg-white rounded-2xl border border-slate-200 p-8 text-center">
+          <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center mx-auto mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Ready to Check Your Request</h3>
+          <p class="text-sm text-slate-500 mt-1 max-w-md mx-auto">
+            Enter a Ticket Reference ID, Video Conference Series #, Starlink Reference #, or Email Address above to check your request progress.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- VIEW 2: ADMIN ALL RECORDS TRACKER                                     -->
+    <!-- ===================================================================== -->
+    <section id="view-tracker" class="hidden max-w-5xl mx-auto space-y-6">
+
+      <!-- Dashboard Header & Summary Metrics -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">All Support, Video Conference &amp; Starlink Records</h2>
+            <p class="text-sm text-slate-500 mt-0.5">Manage Technical Assistance tickets, Video Conference bookings, and Starlink equipment loans, and export to Excel.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onclick="syncFromSharedDatabase(true)"
+              class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold text-teal-800 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-xl shadow-sm transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-teal-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Sync Google Sheets
+            </button>
+            <button
+              type="button"
+              onclick="exportTicketsExcel()"
+              class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold text-emerald-800 bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-300 rounded-xl shadow-sm transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              Export Excel (.xlsx)
+            </button>
+          </div>
+        </div>
+
+        <!-- Record Type Sub-Tabs -->
+        <div class="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="inline-flex flex-wrap bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
+            <button
+              type="button"
+              id="admin-subtab-tats"
+              onclick="switchAdminRecordSubtab('tats')"
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-white text-slate-900 shadow-xs transition-all"
+            >
+              TATS Tickets (<span id="subtab-count-tats">0</span>)
+            </button>
+            <button
+              type="button"
+              id="admin-subtab-vc"
+              onclick="switchAdminRecordSubtab('vc')"
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all"
+            >
+              Video Conference (<span id="subtab-count-vc">0</span>)
+            </button>
+            <button
+              type="button"
+              id="admin-subtab-starlink"
+              onclick="switchAdminRecordSubtab('starlink')"
+              class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all"
+            >
+              Starlink Borrower (<span id="subtab-count-starlink">0</span>)
+            </button>
+          </div>
+        </div>
+
+        <!-- TATS TICKETS SUB-VIEW -->
+        <div id="admin-records-tats-panel">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
+            <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total TATS Tickets</p>
+              <p id="stat-total" class="text-2xl font-bold text-slate-900 mt-1">0</p>
+            </div>
+            <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Solved (YES)</p>
+              <p id="stat-solved" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
+            </div>
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-amber-700">Open / Unsolved (No)</p>
+              <p id="stat-open" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 pt-5 border-t border-slate-100">
+            <div>
+              <input
+                type="text"
+                id="searchTickets"
+                oninput="renderTickets()"
+                placeholder="Search name, facility, ref #, or issue..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none"
+              />
+            </div>
+            <div>
+              <select
+                id="filterSystem"
+                onchange="renderTickets()"
+                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white focus:border-teal-600 focus:outline-none"
+              >
+                <option value="ALL">All Information Systems</option>
+                <option value="iHOMIS, HBSYS, IHOMIS+">iHOMIS, HBSYS, IHOMIS+</option>
+                <option value="iClinicSys">iClinicSys</option>
+              </select>
+            </div>
+            <div>
+              <select
+                id="filterStatus"
+                onchange="renderTickets()"
+                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white focus:border-teal-600 focus:outline-none"
+              >
+                <option value="ALL">All Statuses (YES &amp; No)</option>
+                <option value="No">Solved: No (Open)</option>
+                <option value="YES">Solved: YES (Resolved)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIDEO CONFERENCE RECORDS SUB-VIEW -->
+        <div id="admin-records-vc-panel" class="hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
+            <div class="bg-blue-50/70 border border-blue-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-blue-700">Total VC Requests</p>
+              <p id="vc-stat-total" class="text-2xl font-bold text-blue-900 mt-1">0</p>
+            </div>
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-amber-700">Pending Approval</p>
+              <p id="vc-stat-pending" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+            </div>
+            <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Scheduled / Completed</p>
+              <p id="vc-stat-scheduled" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 pt-5 border-t border-slate-100">
+            <div>
+              <input
+                type="text"
+                id="searchVcRequests"
+                oninput="renderVcRequestsList()"
+                placeholder="Search Series #, meeting title, division, email..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none"
+              />
+            </div>
+            <div>
+              <select
+                id="filterVcStatus"
+                onchange="renderVcRequestsList()"
+                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white focus:border-blue-600 focus:outline-none"
+              >
+                <option value="ALL">All Video Conference Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Scheduled / Approved">Scheduled / Approved</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- STARLINK BORROWER RECORDS SUB-VIEW -->
+        <div id="admin-records-starlink-panel" class="hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
+            <div class="bg-indigo-50/70 border border-indigo-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-indigo-700">Total Starlink Requests</p>
+              <p id="sl-stat-total" class="text-2xl font-bold text-indigo-900 mt-1">0</p>
+            </div>
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-amber-700">Pending / Active Release</p>
+              <p id="sl-stat-active" class="text-2xl font-bold text-amber-800 mt-1">0</p>
+            </div>
+            <div class="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-4">
+              <p class="text-xs font-semibold uppercase tracking-wider text-emerald-700">Returned to ICTU</p>
+              <p id="sl-stat-returned" class="text-2xl font-bold text-emerald-800 mt-1">0</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 pt-5 border-t border-slate-100">
+            <div>
+              <input
+                type="text"
+                id="searchStarlinkRequests"
+                oninput="renderStarlinkRequestsList()"
+                placeholder="Search SL Ref #, borrower name, program/unit, location..."
+                class="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-indigo-600 focus:outline-none"
+              />
+            </div>
+            <div>
+              <select
+                id="filterStarlinkStatus"
+                onchange="renderStarlinkRequestsList()"
+                class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 bg-white focus:border-indigo-600 focus:outline-none"
+              >
+                <option value="ALL">All Starlink Borrower Statuses</option>
+                <option value="Pending Approval">Pending Approval</option>
+                <option value="Approved / Released">Approved / Released</option>
+                <option value="Returned">Returned</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticket List Container -->
+      <div id="ticketsListContainer" class="space-y-4">
+        <!-- Dynamically populated via JS -->
+      </div>
+
+      <!-- Video Conference List Container -->
+      <div id="vcRequestsListContainer" class="hidden space-y-4">
+        <!-- Dynamically populated via JS -->
+      </div>
+
+      <!-- Starlink Borrower List Container -->
+      <div id="starlinkRequestsListContainer" class="hidden space-y-4">
+        <!-- Dynamically populated via JS -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <p>Technical Assistance Ticketing Submission (TATS) &bull; Data Privacy Act of 2012 Compliant</p>
+      <p>Supported Systems: <span class="font-medium text-slate-700">iHOMIS, HBSYS, IHOMIS+ &amp; iClinicSys</span></p>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- ADMIN AUTHENTICATION MODAL                                            -->
+  <!-- ===================================================================== -->
+  <div id="adminLoginModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200 animate-fade-up">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-slate-900 text-teal-400 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">TATS Admin Access</h3>
+            <p class="text-xs text-slate-500">Authorized Technical Assistance Personnel Only</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAdminLoginModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" class="mt-5 space-y-4">
+        <div>
+          <label for="adminPasscodeInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
+            Admin Passcode
+          </label>
+          <input
+            type="password"
+            id="adminPasscodeInput"
+            placeholder="Enter admin passcode..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
+          />
+          <p id="err-adminPasscode" class="hidden text-xs font-medium text-rose-600 mt-1.5">
+            Invalid passcode. Please enter the authorized admin passcode.
+          </p>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex items-center justify-between">
+          <span>Authorized Personnel Login</span>
+          <button
+            type="button"
+            onclick="demoAdminLogin()"
+            class="font-semibold text-teal-700 hover:text-teal-800 underline"
+          >
+            Quick Admin Unlock
+          </button>
+        </div>
+
+        <div class="flex gap-2.5 pt-1">
+          <button
+            type="button"
+            onclick="closeAdminLoginModal()"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors"
+          >
+            Unlock Dashboard
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SUBMISSION CONFIRMATION MODAL                                         -->
+  <!-- ===================================================================== -->
+  <div id="confirmationModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 text-center space-y-4 animate-fade-up">
+      <div class="mx-auto w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <div>
+        <h3 class="text-xl font-bold text-slate-900">Request Submitted Successfully</h3>
+        <p class="text-sm text-slate-600 mt-1">
+          Your request has been logged. Save your Reference ID below to track its status anytime.
+        </p>
+      </div>
+
+      <!-- Ticket Reference Box -->
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex items-center justify-between gap-2">
+        <div class="text-left">
+          <span class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">Reference Number</span>
+          <span id="modalRefNumber" class="font-mono text-base font-bold text-teal-700">TATS-2026-0000</span>
+        </div>
+        <button
+          type="button"
+          onclick="copyReferenceNumber()"
+          class="px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg shadow-2xs transition-colors"
+        >
+          Copy ID
+        </button>
+      </div>
+
+      <div id="modalSummaryDetails" class="text-left text-xs text-slate-600 bg-slate-50/70 rounded-xl p-3.5 space-y-1.5 border border-slate-100">
+        <!-- Summary injected by JS -->
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+        <button
+          type="button"
+          onclick="closeConfirmationModal(false)"
+          class="flex-1 px-4 py-2.5 text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+        >
+          Submit Another
+        </button>
+        <button
+          id="modalPrimaryActionBtn"
+          type="button"
+          onclick="closeConfirmationModal(true)"
+          class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition-colors"
+        >
+          Track Request Status
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- ATTACHMENT IMAGE LIGHTBOX MODAL                                       -->
+  <!-- ===================================================================== -->
+  <div id="imageModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-xs" onclick="closeImageModal()">
+    <div class="bg-white rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl border border-slate-700" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200">
+        <h4 id="imageModalTitle" class="text-sm font-bold text-slate-900 truncate">Error Screenshot</h4>
+        <button type="button" onclick="closeImageModal()" class="p-1 text-slate-500 hover:text-slate-900 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="bg-slate-900 flex items-center justify-center max-h-[75vh] overflow-auto p-4">
+        <img id="modalFullImage" src="" alt="Full Error Attachment" class="max-w-full max-h-[68vh] rounded-lg object-contain" />
+      </div>
+      <div class="px-5 py-3 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-xs text-slate-500">
+        <span id="imageModalCaption"></span>
+        <button type="button" onclick="closeImageModal()" class="px-3.5 py-1.5 font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-100">
+          Close Preview
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TOAST NOTIFICATION BANNER                                             -->
+  <!-- ===================================================================== -->
+  <div id="toastBanner" class="hidden fixed bottom-5 right-5 z-50 max-w-sm bg-slate-900 text-white px-4 py-3.5 rounded-xl shadow-xl border border-slate-700 flex items-start gap-3 animate-fade-up">
+    <div id="toastIconBox" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-teal-500/20 text-teal-400">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </div>
+    <div class="flex-1 text-xs leading-relaxed">
+      <p id="toastTitle" class="font-bold text-sm text-white">Notification</p>
+      <p id="toastMessage" class="text-slate-300 mt-0.5"></p>
+    </div>
+    <button type="button" onclick="hideToast()" class="text-slate-400 hover:text-white p-0.5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC                                                     -->
+  <!-- ===================================================================== -->
+  <script>
+    // Live Google Apps Script Web App URL for Multi-User Shared Google Sheets Database:
+    const SHARED_DB_API_URL = 'https://script.google.com/macros/s/AKfycbw9XAcNgiGHeG-6v5U-R7eviHvv0oxHs6VF_mW3Q3NvlnC_zf6HLKm_C681xEm-Xg-5KQ/exec';
+
+    // Storage keys for persisting TATS tickets, Video Conference requests, Starlink requests, & admin session state
+    const STORAGE_KEY = 'tats_tickets_v3';
+    const VC_STORAGE_KEY = 'tats_vc_requests_v1';
+    const STARLINK_STORAGE_KEY = 'tats_starlink_requests_v1';
+    const VC_SERIES_COUNTER_KEY = 'tats_vc_series_counter_v1';
+    const TATS_SERIES_COUNTER_KEY = 'tats_ticket_series_counter_v1';
+    const STARLINK_SERIES_COUNTER_KEY = 'tats_starlink_series_counter_v1';
+    const ADMIN_SESSION_KEY = 'tats_admin_authenticated_v1';
+    const ADMIN_PASSCODE = 'TCPdannad123';
+    const INITIAL_VC_SERIES = 614;
+    const INITIAL_TATS_SERIES = 1043;
+    const INITIAL_STARLINK_SERIES = 3;
+
+    // In-memory fallback when localStorage/sessionStorage are blocked inside sandboxed iframes
+    const memoryStorage = {};
+    let currentRole = 'client';
+    let currentAttachment = null;
+    let lastSubmittedTicketId = '';
+    let lastSubmittedType = 'tats';
+    let activeAdminRecordSubtab = 'tats';
+    let vcRecordingEnabled = false;
+    let vcUnlockingOption = 'Guests wait in the lobby until the host admits them';
+    let dashboardCharts = {};
+
+    /**
+     * Safe storage wrappers to prevent SecurityError in sandboxed iframe previews
+     */
+    function safeGetStorage(type, key) {
+      try {
+        const store = type === 'session' ? window.sessionStorage : window.localStorage;
+        const val = store.getItem(key);
+        if (val !== null && val !== undefined) return val;
+      } catch (e) {}
+      return Object.prototype.hasOwnProperty.call(memoryStorage, key) ? memoryStorage[key] : null;
+    }
+
+    function safeSetStorage(type, key, value) {
+      memoryStorage[key] = value;
+      try {
+        const store = type === 'session' ? window.sessionStorage : window.localStorage;
+        store.setItem(key, value);
+      } catch (e) {}
+    }
+
+    function safeRemoveStorage(type, key) {
+      delete memoryStorage[key];
+      try {
+        const store = type === 'session' ? window.sessionStorage : window.localStorage;
+        store.removeItem(key);
+      } catch (e) {}
+    }
+
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * Toast notification helper
+     */
+    let toastTimer = null;
+    function showToast(title, message, variant) {
+      const toast = document.getElementById('toastBanner');
+      const titleEl = document.getElementById('toastTitle');
+      const msgEl = document.getElementById('toastMessage');
+      const iconBox = document.getElementById('toastIconBox');
+      if (!toast || !titleEl || !msgEl) return;
+
+      titleEl.textContent = title || 'Notice';
+      msgEl.textContent = message || '';
+
+      if (iconBox) {
+        if (variant === 'error') {
+          iconBox.className = 'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-rose-500/20 text-rose-400';
+        } else if (variant === 'warning') {
+          iconBox.className = 'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-amber-500/20 text-amber-400';
+        } else {
+          iconBox.className = 'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5 bg-teal-500/20 text-teal-400';
+        }
+      }
+
+      toast.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 4200);
+    }
+
+    function hideToast() {
+      const toast = document.getElementById('toastBanner');
+      if (toast) toast.classList.add('hidden');
+    }
+
+    /**
+     * Multi-User Shared Database API Helpers (Google Sheets via Apps Script)
+     */
+    async function syncFromSharedDatabase(showFeedback = false) {
+      if (!SHARED_DB_API_URL || SHARED_DB_API_URL.includes('YOUR_DEPLOYMENT_ID')) {
+        if (showFeedback) {
+          showToast(
+            'API URL Not Configured',
+            'Replace YOUR_DEPLOYMENT_ID in SHARED_DB_API_URL with your Google Apps Script Web App URL.',
+            'warning'
+          );
+        }
+        return;
+      }
+
+      try {
+        const response = await fetch(SHARED_DB_API_URL);
+        const result = await response.json();
+        if (result.status === 'ok' && result.data) {
+          if (Array.isArray(result.data.tats)) {
+            const existingLocal = getTickets();
+            const normalizedTats = result.data.tats.map((t) => {
+              const localMatch = existingLocal.find((loc) => loc.id === t.id);
+              const resolvedDataUrl = t.attachmentData || (localMatch && localMatch.attachment ? localMatch.attachment.dataUrl : '');
+              return {
+                ...t,
+                attachment: (t.attachmentName && t.attachmentName !== 'None') || resolvedDataUrl
+                  ? {
+                      name: t.attachmentName || 'Screenshot.jpg',
+                      type: resolvedDataUrl ? 'image/jpeg' : 'file',
+                      sizeLabel: 'Cloud',
+                      dataUrl: resolvedDataUrl
+                    }
+                  : (t.attachment || null)
+              };
+            });
+            saveTickets(normalizedTats);
+          }
+// ... existing code ... -->
+      const sizeKB = file.size < 1024 * 1024
+        ? `${Math.max(1, Math.round(file.size / 1024))} KB`
+        : `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const rawDataUrl = e.target.result;
+
+        const finalizeAttachment = (finalDataUrl, finalType) => {
+          currentAttachment = {
+            name: file.name,
+            type: finalType,
+            sizeLabel: sizeKB,
+            dataUrl: finalDataUrl
+          };
+
+          const dropZone = document.getElementById('dropZone');
+          const previewCard = document.getElementById('filePreviewCard');
+          const fileNameEl = document.getElementById('previewFileName');
+          const fileMetaEl = document.getElementById('previewFileMeta');
+          const imgEl = document.getElementById('previewImage');
+          const pdfIconEl = document.getElementById('previewPdfIcon');
+
+          if (dropZone) dropZone.classList.add('hidden');
+          if (previewCard) previewCard.classList.remove('hidden');
+          if (fileNameEl) fileNameEl.textContent = currentAttachment.name;
+          if (fileMetaEl) fileMetaEl.textContent = `${currentAttachment.type} • ${currentAttachment.sizeLabel}`;
+
+          if (currentAttachment.dataUrl) {
+            if (imgEl) {
+              imgEl.src = currentAttachment.dataUrl;
+              imgEl.classList.remove('hidden');
+            }
+            if (pdfIconEl) pdfIconEl.classList.add('hidden');
+          } else {
+            if (imgEl) imgEl.classList.add('hidden');
+            if (pdfIconEl) pdfIconEl.classList.remove('hidden');
+          }
+        };
+
+        // Compress image to fit inside a single Google Sheets cell (< 45,000 chars)
+        if (file.type && file.type.startsWith('image/')) {
+          const img = new Image();
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            const maxDim = 640;
+            let w = img.width;
+            let h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              } else {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
+            }
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+
+            let quality = 0.65;
+            let compressed = canvas.toDataURL('image/jpeg', quality);
+            while (compressed.length > 44000 && quality > 0.2) {
+              quality -= 0.1;
+              compressed = canvas.toDataURL('image/jpeg', quality);
+            }
+            finalizeAttachment(compressed, 'image/jpeg');
+          };
+          img.onerror = function () {
+            finalizeAttachment(rawDataUrl, file.type);
+          };
+          img.src = rawDataUrl;
+        } else {
+          finalizeAttachment('', file.type || 'application/octet-stream');
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+// ... existing code ... -->
+      const tickets = getTickets();
+      tickets.unshift(newTicket);
+      saveTickets(tickets);
+
+      pushToSharedDatabase('create', 'TATS Tickets', {
+        ...newTicket,
+        attachmentName: newTicket.attachment ? newTicket.attachment.name : 'None',
+        attachmentData: newTicket.attachment && newTicket.attachment.dataUrl ? newTicket.attachment.dataUrl : ''
+      });
+
+      document.getElementById('modalRefNumber').textContent = ticketId;
+// ... existing code ... -->
