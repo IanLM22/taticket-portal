@@ -494,613 +494,8 @@
           <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
             <h2 class="text-2xl font-bold text-slate-900">Technical Assistance Ticketing Submission (TATS)</h2>
             <div class="flex items-center gap-2">
-              <span id="tatsNextTicketBadge" class="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">
-                Next ID: TATS-2026-1044
-              </span>
-              <input type="hidden" id="tatsTicketNumber" value="1044" />
-              <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
-                * Indicates required question
-              </span>
-            </div>
-          </div>
-
-          <!-- Data Privacy Act of 2012 Notice Box -->
-          <div class="mt-4 bg-slate-50 border-l-4 border-teal-600 rounded-r-xl p-4 sm:p-5 text-sm text-slate-700 leading-relaxed">
-            <div class="flex items-center gap-2 font-semibold text-slate-900 mb-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-teal-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-              <span>Data Privacy Act of 2012 Consent</span>
-            </div>
-            <p class="text-slate-600">
-              Pursuant to the requirements of the Data Privacy Act of 2012, we would like to secure your consent on the collection, processing, storage, and usage of the personal information obtained from this form. The TATS provider is committed in ensuring the confidentiality of the information that you provided in this form and that all data will be used and processed in accordance with existing laws. By signing this, you accept and authorizes to process this information. This includes the certification that all of the information provided is true and correct.
-            </p>
-
-            <!-- Consent Confirmation Checkbox -->
-            <div class="mt-4 pt-3 border-t border-slate-200">
-              <label for="privacyConsent" class="flex items-start gap-3 cursor-pointer select-none group">
-                <input
-                  type="checkbox"
-                  id="privacyConsent"
-                  name="privacyConsent"
-                  class="mt-1 w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
-                />
-                <span class="text-sm font-medium text-slate-800 group-hover:text-slate-900">
-                  I accept and authorize the processing of this information and certify that all provided details are true and correct. <span class="text-rose-600 font-bold">*</span>
-                </span>
-              </label>
-              <p id="err-privacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-                Please check the Data Privacy Consent box before submitting your ticket.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main TATS Form -->
-      <form id="tatsForm" onsubmit="handleTatsFormSubmit(event)" novalidate class="space-y-5">
-
-        <!-- 1. Email * -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
-          <label for="email" class="block text-base font-semibold text-slate-900">
-            1. Email <span class="text-rose-600">*</span>
-          </label>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">Active email address where ticket updates will be sent.</p>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="your.name@facility.gov.ph"
-            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-          />
-          <p id="err-email" class="hidden text-xs font-medium text-rose-600 mt-2">Please enter a valid email address.</p>
-        </div>
-
-        <!-- 2. Full Name * -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
-          <label for="fullName" class="block text-base font-semibold text-slate-900">
-            2. Full Name <span class="text-rose-600">*</span>
-          </label>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">First Name, Middle Initial, Last Name</p>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            required
-            placeholder="e.g., Juan A. Dela Cruz"
-            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-          />
-          <p id="err-fullName" class="hidden text-xs font-medium text-rose-600 mt-2">Full Name is required.</p>
-        </div>
-
-        <!-- 3. Province/Facility * -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
-          <label for="provinceFacility" class="block text-base font-semibold text-slate-900">
-            3. Province/Facility <span class="text-rose-600">*</span>
-          </label>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">Specify your Province and Hospital, RHU, or Health Facility name.</p>
-          <input
-            type="text"
-            id="provinceFacility"
-            name="provinceFacility"
-            required
-            placeholder="e.g., Batangas / RHU I - San Luis"
-            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-          />
-          <p id="err-provinceFacility" class="hidden text-xs font-medium text-rose-600 mt-2">Province/Facility is required.</p>
-        </div>
-
-        <!-- 4. Concerned Information System (Mark only one oval) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <fieldset>
-            <legend class="block text-base font-semibold text-slate-900">
-              4. Concerned Information System
-            </legend>
-            <p class="text-xs text-slate-500 mt-0.5 mb-4">Mark only one option.</p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <!-- Option 1: iHOMIS, HBSYS, IHOMIS+ -->
-              <label class="relative flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/60 has-[:checked]:ring-2 has-[:checked]:ring-teal-500/20">
-                <input
-                  type="radio"
-                  name="infoSystem"
-                  value="iHOMIS, HBSYS, IHOMIS+"
-                  checked
-                  class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer"
-                />
-                <div>
-                  <span class="block text-sm font-semibold text-slate-900">iHOMIS, HBSYS, IHOMIS+</span>
-                  <span class="block text-xs text-slate-500">Hospital Operations &amp; Management</span>
-                </div>
-              </label>
-
-              <!-- Option 2: iClinicSys -->
-              <label class="relative flex items-center gap-3.5 p-4 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-teal-600 has-[:checked]:bg-teal-50/60 has-[:checked]:ring-2 has-[:checked]:ring-teal-500/20">
-                <input
-                  type="radio"
-                  name="infoSystem"
-                  value="iClinicSys"
-                  class="w-4 h-4 text-teal-600 border-slate-300 focus:ring-teal-500 cursor-pointer"
-                />
-                <div>
-                  <span class="block text-sm font-semibold text-slate-900">iClinicSys</span>
-                  <span class="block text-xs text-slate-500">Integrated Clinic Information System</span>
-                </div>
-              </label>
-            </div>
-          </fieldset>
-        </div>
-
-        <!-- 5. Error/Problem Encountered * -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
-          <label for="errorDescription" class="block text-base font-semibold text-slate-900">
-            5. Error/Problem Encountered <span class="text-rose-600">*</span>
-          </label>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">Describe the exact error message, affected module, and steps to reproduce the issue.</p>
-          <textarea
-            id="errorDescription"
-            name="errorDescription"
-            rows="4"
-            required
-            placeholder="Provide detailed information about the technical issue..."
-            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-          ></textarea>
-          <p id="err-errorDescription" class="hidden text-xs font-medium text-rose-600 mt-2">Please describe the error or problem encountered.</p>
-        </div>
-
-        <!-- 6. Screenshot or Picture of the Error/Problem * -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <label class="block text-base font-semibold text-slate-900">
-            6. Screenshot or Picture of the Error/ Problem <span class="text-rose-600">*</span>
-          </label>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">Attach a clear screenshot or photo of the error screen (PNG, JPG, WEBP, or PDF up to 10MB).</p>
-
-          <!-- Drag & Drop Zone -->
-          <div
-            id="dropZone"
-            class="border-2 border-dashed border-slate-300 hover:border-teal-500 rounded-xl p-6 text-center cursor-pointer transition-colors bg-slate-50/60 hover:bg-teal-50/30"
-          >
-            <input
-              type="file"
-              id="screenshotInput"
-              accept="image/*,.pdf"
-              class="hidden"
-            />
-            <div class="mx-auto w-12 h-12 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-            </div>
-            <p class="text-sm font-semibold text-slate-800">
-              Click to upload or drag and drop file here
-            </p>
-            <p class="text-xs text-slate-500 mt-1">
-              Supports PNG, JPG, JPEG, WEBP, or PDF (Max 10MB)
-            </p>
-          </div>
-
-          <!-- Uploaded File Preview Card -->
-          <div id="filePreviewCard" class="hidden mt-4 p-4 rounded-xl border border-slate-200 bg-slate-50">
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex items-center gap-3 min-w-0">
-                <img id="previewImage" src="" alt="Error Screenshot Preview" class="hidden w-16 h-16 object-cover rounded-lg border border-slate-300 shrink-0" />
-                <div id="previewPdfIcon" class="hidden w-12 h-12 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center font-bold text-xs shrink-0">
-                  PDF
-                </div>
-                <div class="min-w-0">
-                  <p id="previewFileName" class="text-sm font-semibold text-slate-900 truncate"></p>
-                  <p id="previewFileMeta" class="text-xs text-slate-500"></p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onclick="clearTatsAttachment()"
-                class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200 rounded-lg transition-colors shrink-0"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-
-          <p id="err-screenshot" class="hidden text-xs font-medium text-rose-600 mt-2">
-            Please attach a screenshot or picture of the error/problem.
-          </p>
-        </div>
-
-        <!-- 7. AnyDesk Address -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 transition-all focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/10">
-          <div class="flex items-center justify-between">
-            <label for="anydeskAddress" class="block text-base font-semibold text-slate-900">
-              7. AnyDesk Address
-            </label>
-            <span class="text-xs font-medium text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">Optional</span>
-          </div>
-          <p class="text-xs text-slate-500 mt-0.5 mb-3">Provide your 9- or 10-digit AnyDesk ID if remote desktop troubleshooting is needed.</p>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-rose-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              id="anydeskAddress"
-              name="anydeskAddress"
-              inputmode="numeric"
-              placeholder="e.g., 123 456 789"
-              class="w-full rounded-xl border border-slate-300 pl-11 pr-4 py-2.5 text-sm font-mono text-slate-900 placeholder-slate-400 focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500/20"
-            />
-          </div>
-        </div>
-
-        <!-- 8. Solved? * (Check all that apply) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-          <fieldset>
-            <legend class="block text-base font-semibold text-slate-900">
-              8. Solved? <span class="text-rose-600">*</span>
-            </legend>
-            <p class="text-xs text-slate-500 mt-0.5 mb-4">Indicate whether the issue was already resolved or still requires assistance.</p>
-
-            <div class="flex flex-col sm:flex-row gap-3">
-              <label class="flex-1 flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/70">
-                <input
-                  type="checkbox"
-                  id="solvedNo"
-                  name="solvedStatus"
-                  value="No"
-                  checked
-                  onchange="handleSolvedCheckbox('No')"
-                  class="w-4 h-4 rounded border-slate-300 text-amber-600 focus:ring-amber-500 cursor-pointer"
-                />
-                <span class="text-sm font-semibold text-slate-800">No</span>
-                <span class="ml-auto text-xs text-slate-500">Needs TA Support</span>
-              </label>
-
-              <label class="flex-1 flex items-center gap-3 p-3.5 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-all has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50/70">
-                <input
-                  type="checkbox"
-                  id="solvedYes"
-                  name="solvedStatus"
-                  value="YES"
-                  onchange="handleSolvedCheckbox('YES')"
-                  class="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
-                />
-                <span class="text-sm font-semibold text-slate-800">YES</span>
-                <span class="ml-auto text-xs text-slate-500">Resolved / For Logging</span>
-              </label>
-            </div>
-            <p id="err-solved" class="hidden text-xs font-medium text-rose-600 mt-2">Please select either YES or No.</p>
-          </fieldset>
-        </div>
-
-        <!-- Form Action Buttons -->
-        <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-2 pb-6">
-          <button
-            type="button"
-            onclick="resetTatsForm()"
-            class="w-full sm:w-auto px-5 py-3 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-200/70 rounded-xl transition-colors"
-          >
-            Clear Form
-          </button>
-
-          <button
-            type="submit"
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 rounded-xl shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-            Submit TATS Ticket
-          </button>
-        </div>
-      </form>
-    </section>
-
-    <!-- ===================================================================== -->
-    <!-- VIEW 1A: ADD NEW REQUEST FOR VIDEO CONFERENCE MEETING                 -->
-    <!-- ===================================================================== -->
-    <section id="view-vc-request" class="hidden max-w-6xl mx-auto space-y-6 animate-fade-up">
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <!-- Top Form Header -->
-        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-          <h2 class="text-base sm:text-lg font-bold text-blue-600">
-            Add New Request for Video Conference Meeting
-          </h2>
-          <span class="text-xs font-medium text-slate-500">Webex Meeting Scheduling</span>
-        </div>
-
-        <form id="vcRequestForm" onsubmit="handleVcRequestSubmit(event)" novalidate class="p-6 space-y-5">
-          <!-- Row 1: Series Number -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-slate-100/90 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="block text-[11px] font-medium text-slate-500">Series Number</span>
-                  <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
-                    Auto-Increment
-                  </span>
-                </div>
-                <span id="vcSeriesNumberDisplay" class="block text-base font-bold text-slate-900 mt-0.5">614</span>
-                <input type="hidden" id="vcSeriesNumber" name="vcSeriesNumber" value="614" />
-              </div>
-              <span class="text-xs font-mono text-slate-400">System Assigned</span>
-            </div>
-          </div>
-
-          <!-- Row 2: Title of Meeting | Date | Time | Length (Hours) -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
-            <div class="lg:col-span-6">
-              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcTitle" class="block text-[11px] font-medium text-slate-500">
-                  Title of Meeting <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="vcTitle"
-                  name="vcTitle"
-                  required
-                  placeholder="Enter official title of the meeting"
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcTitle" class="hidden text-xs font-medium text-rose-600 mt-1">Title of Meeting is required.</p>
-            </div>
-
-            <div class="lg:col-span-2">
-              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcDate" class="block text-[11px] font-medium text-slate-500">
-                  Date of Meeting <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="date"
-                  id="vcDate"
-                  name="vcDate"
-                  required
-                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcDate" class="hidden text-xs font-medium text-rose-600 mt-1">Date is required.</p>
-            </div>
-
-            <div class="lg:col-span-2">
-              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcTime" class="block text-[11px] font-medium text-slate-500">
-                  Time of Meeting <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="time"
-                  id="vcTime"
-                  name="vcTime"
-                  required
-                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcTime" class="hidden text-xs font-medium text-rose-600 mt-1">Time is required.</p>
-            </div>
-
-            <div class="lg:col-span-2">
-              <div class="relative rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcLength" class="block text-[11px] font-medium text-slate-500">
-                  Length of Meeting (Hours) <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="number"
-                  id="vcLength"
-                  name="vcLength"
-                  min="0.5"
-                  max="24"
-                  step="0.5"
-                  required
-                  placeholder="e.g., 2"
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcLength" class="hidden text-xs font-medium text-rose-600 mt-1">Hours required.</p>
-            </div>
-          </div>
-
-          <!-- Row 3: Email Address/es of Participants | Names of Host and Co-Host -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcParticipants" class="block text-[11px] font-medium text-slate-500">
-                  Email Address/es of Participants <span class="text-rose-600">*</span>
-                </label>
-                <textarea
-                  id="vcParticipants"
-                  name="vcParticipants"
-                  rows="2"
-                  required
-                  placeholder="Separate multiple email addresses with commas"
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5 resize-y"
-                ></textarea>
-              </div>
-              <p id="err-vcParticipants" class="hidden text-xs font-medium text-rose-600 mt-1">Please enter participant email address/es.</p>
-            </div>
-
-            <div>
-              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 h-full flex flex-col justify-center focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcHostCoHost" class="block text-[11px] font-medium text-slate-500">
-                  Names of Host and Co-Host <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="vcHostCoHost"
-                  name="vcHostCoHost"
-                  required
-                  placeholder="e.g., Host: Juan Dela Cruz / Co-Host: Maria Santos"
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcHostCoHost" class="hidden text-xs font-medium text-rose-600 mt-1">Names of Host and Co-Host are required.</p>
-            </div>
-          </div>
-
-          <!-- Row 4: Office Email Address | Division/Program/Unit -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div>
-              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcOfficeEmail" class="block text-[11px] font-medium text-slate-500">
-                  Office Email Address <span class="text-rose-600">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="vcOfficeEmail"
-                  name="vcOfficeEmail"
-                  required
-                  placeholder="office.unit@doh.gov.ph"
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5"
-                />
-              </div>
-              <p id="err-vcOfficeEmail" class="hidden text-xs font-medium text-rose-600 mt-1">Valid Office Email Address is required.</p>
-            </div>
-
-            <div>
-              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcDivision" class="block text-[11px] font-medium text-slate-500">
-                  Division/Program/Unit <span class="text-rose-600">*</span>
-                </label>
-                <select
-                  id="vcDivision"
-                  name="vcDivision"
-                  required
-                  class="w-full text-sm text-slate-900 bg-transparent focus:outline-none mt-0.5 cursor-pointer"
-                >
-                  <option value="">Choose Program/Unit...</option>
-                  <option value="UNIVERSAL HEALTH CARE (UHC)">UNIVERSAL HEALTH CARE (UHC)</option>
-                  <option value="Infectious Diseases Cluster (IDC)">Infectious Diseases Cluster (IDC)</option>
-                  <option value="Philippine Business for Social Progress (PBSP)">Philippine Business for Social Progress (PBSP)</option>
-                  <option value="HEALTH EDUCATION AND PROMOTION UNIT (HEPU)">HEALTH EDUCATION AND PROMOTION UNIT (HEPU)</option>
-                  <option value="HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)">HEALTH EMERGENCY MANAGEMENT SERVICES (HEMS)</option>
-                  <option value="Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU">Center for Regional Epidemiology &amp; Technology Enhancement (CRE@TE) / RESU</option>
-                  <option value="VECTOR BORNE">VECTOR BORNE</option>
-                  <option value="Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)">Medical Assistance for Indigent and Financially Incapacitated Program (MAIFIP)</option>
-                  <option value="Integrated Non-Communicable Disease Program Cluster (INCDPC)">Integrated Non-Communicable Disease Program Cluster (INCDPC)</option>
-                  <option value="Environmental and Occupational Health Cluster (EOHC)">Environmental and Occupational Health Cluster (EOHC)</option>
-                  <option value="FAMILY HEALTH CARE (FHC)">FAMILY HEALTH CARE (FHC)</option>
-                  <option value="HUMAN RESOURCES FOR HEALTH (HRH)">HUMAN RESOURCES FOR HEALTH (HRH)</option>
-                  <option value="Information and Communications Technology Unit (ICTU)">Information and Communications Technology Unit (ICTU)</option>
-                  <option value="ADMINISTRATIVE SECTION">ADMINISTRATIVE SECTION</option>
-                </select>
-              </div>
-              <p id="err-vcDivision" class="hidden text-xs font-medium text-rose-600 mt-1">Please select a Division/Program/Unit.</p>
-            </div>
-          </div>
-
-          <!-- Row 5: Webex Options, Unlocking of Meeting & Remarks -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start pt-1">
-            <div class="space-y-4">
-              <!-- Webex Options -->
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <span class="text-sm text-slate-700 font-medium min-w-[145px]">Webex options:</span>
-                <div class="flex-1 space-y-2">
-                  <button
-                    type="button"
-                    id="vcRecordingToggleBtn"
-                    onclick="toggleVcRecordingOption()"
-                    class="px-4 py-2 text-xs sm:text-sm font-medium rounded-md border border-blue-400 text-blue-600 bg-white hover:bg-blue-50 transition-all"
-                  >
-                    Recording sends to (email address)
-                  </button>
-                  <input type="hidden" id="vcRecordingOptionValue" value="None" />
-                  <div id="vcRecordingEmailWrap" class="hidden">
-                    <input
-                      type="email"
-                      id="vcRecordingEmail"
-                      placeholder="Enter recipient email for Webex recording..."
-                      class="w-full rounded-lg border border-blue-300 px-3 py-1.5 text-xs sm:text-sm text-slate-900 focus:border-blue-600 focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <!-- Unlocking of Meeting -->
-              <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-                <span class="text-sm text-slate-700 font-medium min-w-[145px]">Unlocking of Meeting:</span>
-                <div class="inline-flex flex-wrap gap-1.5" role="group" aria-label="Unlocking of Meeting">
-                  <button
-                    type="button"
-                    id="vcUnlockGuestBtn"
-                    onclick="selectVcUnlockingOption('Guest can join the meeting')"
-                    class="px-3.5 py-2 text-xs sm:text-sm font-medium rounded-md border border-slate-300 bg-white text-slate-500 hover:text-slate-800 transition-all"
-                  >
-                    Guest can join the meeting
-                  </button>
-                  <button
-                    type="button"
-                    id="vcUnlockLobbyBtn"
-                    onclick="selectVcUnlockingOption('Guests wait in the lobby until the host admits them')"
-                    class="px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-md border-2 border-slate-800 bg-white text-slate-900 shadow-xs transition-all"
-                  >
-                    Guests wait in the lobby until the host admits them
-                  </button>
-                  <input type="hidden" id="vcUnlockingOption" value="Guests wait in the lobby until the host admits them" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Remarks -->
-            <div>
-              <div class="rounded-xl border border-slate-300 bg-white px-3.5 py-2 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20">
-                <label for="vcRemarks" class="block text-[11px] font-medium text-slate-500">
-                  Remarks
-                </label>
-                <textarea
-                  id="vcRemarks"
-                  name="vcRemarks"
-                  rows="3"
-                  placeholder="Optional instructions, breakout room requests, or technical notes..."
-                  class="w-full text-sm text-slate-900 placeholder-slate-400 bg-transparent focus:outline-none mt-0.5 resize-y"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- Form Action Buttons -->
-          <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100">
-            <button
-              type="button"
-              onclick="resetVcRequestForm()"
-              class="w-full sm:w-auto px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
-            >
-              Clear Form
-            </button>
-            <button
-              type="submit"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-md transition-all"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Submit Video Conference Request
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- ===================================================================== -->
-    <!-- VIEW 1A-2: STARLINK BORROWER FORM                                     -->
-    <!-- ===================================================================== -->
-    <section id="view-starlink-request" class="hidden max-w-3xl mx-auto space-y-6 animate-fade-up">
-
-      <!-- Banner & Data Privacy Act of 2012 Notice Card -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="h-2.5 bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600"></div>
-        <div class="p-6 sm:p-8">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs shrink-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
-                </svg>
-              </div>
-              <h2 class="text-2xl font-bold text-slate-900">STARLINK BORROWER FORM</h2>
-            </div>
-            <div class="flex items-center gap-2">
-              <span id="slReferenceBadge" class="font-mono text-xs font-bold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
-                Next Ref: SL-2026-004
+              <span class="font-mono text-xs font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-lg">
+                Ticket ID assigned upon submission
               </span>
               <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
                 * Indicates required question
@@ -1121,20 +516,20 @@
             </p>
 
             <div class="mt-4 pt-3 border-t border-slate-200">
-              <label for="slPrivacyConsent" class="flex items-start gap-3 cursor-pointer select-none group">
-                <input
-                  type="checkbox"
-                  id="slPrivacyConsent"
-                  name="slPrivacyConsent"
-                  class="mt-1 w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                />
-                <span class="text-sm font-medium text-slate-800 group-hover:text-slate-900">
-                  I accept and authorize the processing of this information and certify that all details provided are true and correct. <span class="text-rose-600 font-bold">*</span>
-                </span>
-              </label>
-              <p id="err-slPrivacyConsent" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-                Please check the Data Privacy Consent box before submitting.
-              </p>
+        <form id="vcRequestForm" onsubmit="handleVcRequestSubmit(event)" novalidate class="p-6 space-y-5">
+          <!-- Row 1: Series Number Notice -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-slate-100/90 border border-slate-200 rounded-xl px-4 py-2.5 flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="block text-[11px] font-medium text-slate-500">Series Number</span>
+                  <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-1.5 py-0.5 rounded">
+                    Auto-Generated on Submit
+                  </span>
+                </div>
+                <span class="block text-sm font-semibold text-slate-700 mt-0.5">Assigned automatically upon submission</span>
+              </div>
+              <span class="text-xs font-mono text-slate-400">Unique ID</span>
             </div>
           </div>
         </div>
@@ -1301,13 +696,13 @@
               </label>
               <p class="text-xs text-slate-500 mt-0.5 mb-3">Example: January 7, 2026</p>
               <input
-                type="date"
-                id="slResEndDate"
-                name="slResEndDate"
-                required
-                class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm text-slate-900 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-              />
-              <p id="err-slResEndDate" class="hidden text-xs font-medium text-rose-600 mt-2">Reservation end date is required.</p>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-lg">
+                Ref # assigned upon submission
+              </span>
+              <span class="text-xs font-medium text-rose-600 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-lg">
+                * Indicates required question
+              </span>
             </div>
           </div>
         </div>
@@ -2141,12 +1536,6 @@
         renderTickets();
         renderVcRequestsList();
         renderStarlinkRequestsList();
-      } else if (tabName === 'vc-request') {
-        refreshVcSeriesNumberDisplay();
-      } else if (tabName === 'starlink-request') {
-        refreshStarlinkSeriesNumberDisplay();
-      } else if (tabName === 'submit') {
-        refreshTatsTicketNumberDisplay();
       }
     }
 
@@ -2305,15 +1694,12 @@
 
           const nextVc = getNextUniqueVcSeriesNumber();
           safeSetStorage('local', VC_SERIES_COUNTER_KEY, String(nextVc));
-          refreshVcSeriesNumberDisplay();
 
           const nextTats = getNextUniqueTatsSeriesNumber();
           safeSetStorage('local', TATS_SERIES_COUNTER_KEY, String(nextTats));
-          refreshTatsTicketNumberDisplay();
 
           const nextSl = getNextUniqueStarlinkSeriesNumber();
           safeSetStorage('local', STARLINK_SERIES_COUNTER_KEY, String(nextSl));
-          refreshStarlinkSeriesNumberDisplay();
 
           updateTicketCountBadge();
           if (currentRole === 'admin') {
@@ -2388,11 +1774,8 @@
     }
 
     function refreshVcSeriesNumberDisplay() {
-      const nextSeries = getNextUniqueVcSeriesNumber();
-      const displayEl = document.getElementById('vcSeriesNumberDisplay');
-      const hiddenEl = document.getElementById('vcSeriesNumber');
-      if (displayEl) displayEl.textContent = String(nextSeries);
-      if (hiddenEl) hiddenEl.value = String(nextSeries);
+      // Series number is now generated and displayed exclusively after clicking Submit
+      return getNextUniqueVcSeriesNumber();
     }
 
     function getUsedTatsSeriesSet() {
@@ -2444,11 +1827,9 @@
     }
 
     function refreshTatsTicketNumberDisplay() {
-      const validated = validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
-      const badgeEl = document.getElementById('tatsNextTicketBadge');
-      if (badgeEl) {
-        badgeEl.textContent = `Next ID: ${validated.ticketId}`;
-      }
+      // Ticket ID is now generated and displayed exclusively after clicking Submit
+      return validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
+    }
       const hiddenEl = document.getElementById('tatsTicketNumber');
       if (hiddenEl) {
         hiddenEl.value = String(validated.seriesNumber);
@@ -2505,11 +1886,9 @@
     }
 
     function refreshStarlinkSeriesNumberDisplay() {
-      const nextSeries = getNextUniqueStarlinkSeriesNumber();
-      const badgeEl = document.getElementById('slReferenceBadge');
-      if (badgeEl) {
-        badgeEl.textContent = `Next Ref: SL-2026-${String(nextSeries).padStart(3, '0')}`;
-      }
+      // Reference number is now generated and displayed exclusively after clicking Submit
+      return getNextUniqueStarlinkSeriesNumber();
+    }
     }
 
     // =========================================================================
@@ -2644,7 +2023,6 @@
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
-      refreshTatsTicketNumberDisplay();
     }
 
     async function handleTatsFormSubmit(event) {
@@ -2682,137 +2060,89 @@
         return;
       }
 
-      // Sync with shared database first to validate and prevent multi-user ticket number collisions
-      await syncFromSharedDatabase(false);
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Generating Unique Ticket ID...';
+      }
 
-      const proposedInput = document.getElementById('tatsTicketNumber');
-      const rawProposedNum = proposedInput ? parseInt(proposedInput.value, 10) : getNextUniqueTatsSeriesNumber();
-      const proposedId = `TATS-2026-${rawProposedNum}`;
+      try {
+        // Sync with shared database at submission time so multi-user ticket numbers never collide
+        await syncFromSharedDatabase(false);
 
-      const validated = validateAndResolveUniqueTatsNumber(rawProposedNum);
-      let uniqueNum = validated.seriesNumber;
-      let ticketId = validated.ticketId;
+        const validated = validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
+        let uniqueNum = validated.seriesNumber;
+        let ticketId = validated.ticketId;
 
-      if (isNaN(rawProposedNum) || !isValidTatsTicketFormat(proposedId) || proposedId !== ticketId) {
-        refreshTatsTicketNumberDisplay();
-        if (!isNaN(rawProposedNum) && proposedId !== ticketId) {
-          showToast(
-            'Ticket Number Validated',
-            `${proposedId} was already in use. Assigned unique ${ticketId} to prevent duplication.`,
-            'warning'
-          );
+        const solvedStatus = solvedYesChecked ? 'YES' : 'No';
+
+        const newTicket = {
+          id: ticketId,
+          seriesNumber: uniqueNum,
+          submittedAt: new Date().toISOString(),
+          email,
+          fullName,
+          provinceFacility,
+          infoSystem,
+          errorDescription,
+          anydeskAddress,
+          solved: solvedStatus,
+          attachment: currentAttachment ? { ...currentAttachment } : null
+        };
+
+        const tickets = getTickets();
+        if (isTatsTicketNumberDuplicate(ticketId)) {
+          const revalidated = validateAndResolveUniqueTatsNumber(uniqueNum + 1);
+          newTicket.seriesNumber = revalidated.seriesNumber;
+          newTicket.id = revalidated.ticketId;
+        }
+
+        tickets.unshift(newTicket);
+        saveTickets(tickets);
+        safeSetStorage('local', TATS_SERIES_COUNTER_KEY, String(newTicket.seriesNumber + 1));
+
+        pushToSharedDatabase('create', 'TATS Tickets', {
+          ...newTicket,
+          attachmentName: newTicket.attachment ? newTicket.attachment.name : 'None',
+          attachmentData: newTicket.attachment ? newTicket.attachment.dataUrl : ''
+        });
+
+        lastSubmittedTicketId = newTicket.id;
+        lastSubmittedType = 'tats';
+
+        document.getElementById('modalRefNumber').textContent = newTicket.id;
+        document.getElementById('modalSummaryDetails').innerHTML = `
+          <p><span class="font-semibold text-slate-800">Generated Ticket ID:</span> <span class="font-mono font-bold text-teal-700">${escapeHTML(newTicket.id)}</span></p>
+          <p><span class="font-semibold text-slate-800">Reported By:</span> ${escapeHTML(fullName)}</p>
+          <p><span class="font-semibold text-slate-800">Facility:</span> ${escapeHTML(provinceFacility)}</p>
+          <p><span class="font-semibold text-slate-800">System:</span> ${escapeHTML(newTicket.infoSystem)}</p>
+          <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold ${solvedStatus === 'YES' ? 'text-emerald-700' : 'text-amber-700'}">${solvedStatus === 'YES' ? 'Solved (YES)' : 'Unsolved (No)'}</span></p>
+        `;
+
+        const primaryBtn = document.getElementById('modalPrimaryActionBtn');
+        if (primaryBtn) {
+          primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
+        }
+
+        document.getElementById('confirmationModal').classList.remove('hidden');
+        resetTatsForm();
+        updateTicketCountBadge();
+        if (currentRole === 'admin') {
+          renderDashboard();
+          renderTickets();
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnHtml;
         }
       }
-
-      const solvedStatus = solvedYesChecked ? 'YES' : 'No';
-
-      const newTicket = {
-        id: ticketId,
-        seriesNumber: uniqueNum,
-        submittedAt: new Date().toISOString(),
-        email,
-        fullName,
-        provinceFacility,
-        infoSystem,
-        errorDescription,
-        anydeskAddress,
-        solved: solvedStatus,
-        attachment: currentAttachment ? { ...currentAttachment } : null
-      };
-
-      const tickets = getTickets();
-      if (isTatsTicketNumberDuplicate(ticketId)) {
-        const revalidated = validateAndResolveUniqueTatsNumber(uniqueNum + 1);
-        newTicket.seriesNumber = revalidated.seriesNumber;
-        newTicket.id = revalidated.ticketId;
-      }
-
-      tickets.unshift(newTicket);
-      saveTickets(tickets);
-      safeSetStorage('local', TATS_SERIES_COUNTER_KEY, String(newTicket.seriesNumber + 1));
-
-      pushToSharedDatabase('create', 'TATS Tickets', {
-        ...newTicket,
-        attachmentName: newTicket.attachment ? newTicket.attachment.name : 'None',
-        attachmentData: newTicket.attachment ? newTicket.attachment.dataUrl : ''
-      });
-
-      lastSubmittedTicketId = newTicket.id;
-      lastSubmittedType = 'tats';
-
-      document.getElementById('modalRefNumber').textContent = newTicket.id;
-      document.getElementById('modalSummaryDetails').innerHTML = `
-        <p><span class="font-semibold text-slate-800">Reported By:</span> ${escapeHTML(fullName)}</p>
-        <p><span class="font-semibold text-slate-800">Facility:</span> ${escapeHTML(provinceFacility)}</p>
-        <p><span class="font-semibold text-slate-800">System:</span> ${escapeHTML(newTicket.infoSystem)}</p>
-        <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold ${solvedStatus === 'YES' ? 'text-emerald-700' : 'text-amber-700'}">${solvedStatus === 'YES' ? 'Solved (YES)' : 'Unsolved (No)'}</span></p>
-      `;
-
-      const primaryBtn = document.getElementById('modalPrimaryActionBtn');
-      if (primaryBtn) {
-        primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
-      }
-
-      document.getElementById('confirmationModal').classList.remove('hidden');
-      resetTatsForm();
-      updateTicketCountBadge();
-      if (currentRole === 'admin') {
-        renderDashboard();
-        renderTickets();
-      }
     }
-
-    // =========================================================================
-    // VIDEO CONFERENCE REQUEST & MANUAL WEBEX LINK APPROVAL
-    // =========================================================================
-
-    function toggleVcRecordingOption() {
-      vcRecordingEnabled = !vcRecordingEnabled;
-      const btn = document.getElementById('vcRecordingToggleBtn');
-      const wrapper = document.getElementById('vcRecordingEmailWrap');
-      const valInput = document.getElementById('vcRecordingOptionValue');
-      if (btn) {
-        btn.className = vcRecordingEnabled
-          ? 'px-4 py-2 text-xs sm:text-sm font-bold rounded-md border-2 border-blue-600 text-blue-700 bg-blue-50 transition-all'
-          : 'px-4 py-2 text-xs sm:text-sm font-medium rounded-md border border-blue-400 text-blue-600 bg-white hover:bg-blue-50 transition-all';
-      }
-      if (wrapper) wrapper.classList.toggle('hidden', !vcRecordingEnabled);
-      if (valInput) valInput.value = vcRecordingEnabled ? 'Requested' : 'None';
-    }
-
-    function selectVcUnlockingOption(optionText) {
-      vcUnlockingOption = optionText;
-      const directBtn = document.getElementById('vcUnlockGuestBtn');
-      const lobbyBtn = document.getElementById('vcUnlockLobbyBtn');
-      const hiddenInput = document.getElementById('vcUnlockingOption');
-      const activeStyle = 'px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-md border-2 border-slate-800 bg-white text-slate-900 shadow-xs transition-all';
-      const inactiveStyle = 'px-3.5 py-2 text-xs sm:text-sm font-medium rounded-md border border-slate-300 bg-white text-slate-500 hover:text-slate-800 transition-all';
-
-      if (directBtn) {
-        directBtn.className = optionText === 'Guest can join the meeting' ? activeStyle : inactiveStyle;
-      }
-      if (lobbyBtn) {
-        lobbyBtn.className = optionText === 'Guests wait in the lobby until the host admits them' ? activeStyle : inactiveStyle;
-      }
-      if (hiddenInput) hiddenInput.value = optionText;
-    }
-
-    function resetVcRequestForm() {
-      const form = document.getElementById('vcRequestForm');
-      if (form) form.reset();
-      vcRecordingEnabled = false;
-      const btn = document.getElementById('vcRecordingToggleBtn');
-      if (btn) {
-        btn.className = 'px-4 py-2 text-xs sm:text-sm font-medium rounded-md border border-blue-400 text-blue-600 bg-white hover:bg-blue-50 transition-all';
-      }
-      const wrapper = document.getElementById('vcRecordingEmailWrap');
-      if (wrapper) wrapper.classList.add('hidden');
-      selectVcUnlockingOption('Guests wait in the lobby until the host admits them');
       ['err-vcTitle', 'err-vcDate', 'err-vcTime', 'err-vcLength', 'err-vcParticipants', 'err-vcHostCoHost', 'err-vcOfficeEmail', 'err-vcDivision'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
-      refreshVcSeriesNumberDisplay();
     }
 
     async function handleVcRequestSubmit(event) {
@@ -2849,218 +2179,96 @@
         return;
       }
 
-      // Sync latest records from shared database first to prevent multi-user Series Number collisions
-      await syncFromSharedDatabase(false);
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Generating Series Number...';
+      }
 
-      let assignedSeries = parseInt(document.getElementById('vcSeriesNumber').value, 10);
-      if (isNaN(assignedSeries) || isVcSeriesNumberDuplicate(assignedSeries)) {
-        const previousSeries = assignedSeries;
-        assignedSeries = getNextUniqueVcSeriesNumber();
-        refreshVcSeriesNumberDisplay();
-        if (!isNaN(previousSeries)) {
-          showToast(
-            'Series Number Updated',
-            `Series #${previousSeries} was already taken. Reassigned to unique Series #${assignedSeries}.`,
-            'warning'
-          );
+      try {
+        // Sync latest records from shared database at submission time to prevent multi-user Series Number collisions
+        await syncFromSharedDatabase(false);
+
+        let assignedSeries = getNextUniqueVcSeriesNumber();
+        while (isVcSeriesNumberDuplicate(assignedSeries)) {
+          assignedSeries++;
+        }
+
+        const vcId = `VC-${assignedSeries}`;
+        let recordingSendTo = 'Not Requested';
+        if (vcRecordingEnabled) {
+          const recEmail = document.getElementById('vcRecordingEmail').value.trim();
+          recordingSendTo = recEmail ? `Send to: ${recEmail}` : 'Requested (Office Email)';
+        }
+
+        const newVc = {
+          id: vcId,
+          seriesNumber: assignedSeries,
+          submittedAt: new Date().toISOString(),
+          title,
+          dateOfMeeting,
+          timeOfMeeting,
+          lengthHours: Number(lengthHours),
+          participants,
+          hostAndCoHost,
+          officeEmail,
+          divisionOffice,
+          recordingSendTo,
+          unlockingOption: vcUnlockingOption,
+          remarks,
+          status: 'Pending',
+          webexLink: 'Awaiting Admin Webex Link'
+        };
+
+        const vcList = getVcRequests();
+        if (vcList.some((v) => Number(v.seriesNumber) === assignedSeries || v.id === vcId)) {
+          assignedSeries = getNextUniqueVcSeriesNumber();
+          newVc.seriesNumber = assignedSeries;
+          newVc.id = `VC-${assignedSeries}`;
+        }
+
+        vcList.unshift(newVc);
+        saveVcRequests(vcList);
+        safeSetStorage('local', VC_SERIES_COUNTER_KEY, String(assignedSeries + 1));
+
+        pushToSharedDatabase('create', 'Video Conference', newVc);
+
+        lastSubmittedTicketId = newVc.id;
+        lastSubmittedType = 'vc';
+
+        document.getElementById('modalRefNumber').textContent = `${newVc.id} (Series #${assignedSeries})`;
+        document.getElementById('modalSummaryDetails').innerHTML = `
+          <p><span class="font-semibold text-slate-800">Generated Series Number:</span> <span class="font-mono font-bold text-blue-700">#${escapeHTML(assignedSeries)} (${escapeHTML(newVc.id)})</span></p>
+          <p><span class="font-semibold text-slate-800">Meeting Title:</span> ${escapeHTML(title)}</p>
+          <p><span class="font-semibold text-slate-800">Schedule:</span> ${escapeHTML(dateOfMeeting)} at ${escapeHTML(timeOfMeeting)} (${escapeHTML(lengthHours)} hr/s)</p>
+          <p><span class="font-semibold text-slate-800">Division / Unit:</span> ${escapeHTML(divisionOffice)}</p>
+          <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold text-amber-700">Pending (Webex Link Pending Admin Review)</span></p>
+        `;
+
+        const primaryBtn = document.getElementById('modalPrimaryActionBtn');
+        if (primaryBtn) {
+          primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
+        }
+
+        document.getElementById('confirmationModal').classList.remove('hidden');
+        resetVcRequestForm();
+        updateTicketCountBadge();
+        if (currentRole === 'admin') {
+          renderDashboard();
+          renderVcRequestsList();
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnHtml;
         }
       }
-
-      const vcId = `VC-${assignedSeries}`;
-      let recordingSendTo = 'Not Requested';
-      if (vcRecordingEnabled) {
-        const recEmail = document.getElementById('vcRecordingEmail').value.trim();
-        recordingSendTo = recEmail ? `Send to: ${recEmail}` : 'Requested (Office Email)';
-      }
-
-      const newVc = {
-        id: vcId,
-        seriesNumber: assignedSeries,
-        submittedAt: new Date().toISOString(),
-        title,
-        dateOfMeeting,
-        timeOfMeeting,
-        lengthHours: Number(lengthHours),
-        participants,
-        hostAndCoHost,
-        officeEmail,
-        divisionOffice,
-        recordingSendTo,
-        unlockingOption: vcUnlockingOption,
-        remarks,
-        status: 'Pending',
-        webexLink: 'Awaiting Admin Webex Link'
-      };
-
-      const vcList = getVcRequests();
-      if (vcList.some((v) => Number(v.seriesNumber) === assignedSeries || v.id === vcId)) {
-        assignedSeries = getNextUniqueVcSeriesNumber();
-        newVc.seriesNumber = assignedSeries;
-        newVc.id = `VC-${assignedSeries}`;
-      }
-
-      vcList.unshift(newVc);
-      saveVcRequests(vcList);
-      safeSetStorage('local', VC_SERIES_COUNTER_KEY, String(assignedSeries + 1));
-
-      pushToSharedDatabase('create', 'Video Conference', newVc);
-
-      lastSubmittedTicketId = newVc.id;
-      lastSubmittedType = 'vc';
-
-      document.getElementById('modalRefNumber').textContent = `${newVc.id} (Series #${assignedSeries})`;
-      document.getElementById('modalSummaryDetails').innerHTML = `
-        <p><span class="font-semibold text-slate-800">Series Number:</span> #${escapeHTML(assignedSeries)}</p>
-        <p><span class="font-semibold text-slate-800">Meeting Title:</span> ${escapeHTML(title)}</p>
-        <p><span class="font-semibold text-slate-800">Schedule:</span> ${escapeHTML(dateOfMeeting)} at ${escapeHTML(timeOfMeeting)} (${escapeHTML(lengthHours)} hr/s)</p>
-        <p><span class="font-semibold text-slate-800">Division / Unit:</span> ${escapeHTML(divisionOffice)}</p>
-        <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold text-amber-700">Pending (Webex Link Pending Admin Review)</span></p>
-      `;
-
-      const primaryBtn = document.getElementById('modalPrimaryActionBtn');
-      if (primaryBtn) {
-        primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
-      }
-
-      document.getElementById('confirmationModal').classList.remove('hidden');
-      resetVcRequestForm();
-      updateTicketCountBadge();
-      if (currentRole === 'admin') {
-        renderDashboard();
-        renderVcRequestsList();
-      }
     }
-
-    function openVcApproveModal(vcId) {
-      if (currentRole !== 'admin') {
-        openAdminLoginModal();
-        return;
-      }
-      const vcList = getVcRequests();
-      const item = vcList.find((v) => v.id === vcId);
-      if (!item) return;
-
-      document.getElementById('vcApproveTargetId').value = item.id;
-      document.getElementById('vcApproveSubtitle').textContent = `Series #${item.seriesNumber} (${item.id}) • ${item.divisionOffice}`;
-      document.getElementById('vcApproveMeetingInfo').innerHTML = `
-        <p><span class="font-semibold text-slate-900">Meeting Title:</span> ${escapeHTML(item.title)}</p>
-        <p><span class="font-semibold text-slate-900">Schedule:</span> ${escapeHTML(item.dateOfMeeting)} at ${escapeHTML(item.timeOfMeeting)} (${escapeHTML(item.lengthHours)} hr/s)</p>
-        <p><span class="font-semibold text-slate-900">Host &amp; Co-Host:</span> ${escapeHTML(item.hostAndCoHost)}</p>
-        <p><span class="font-semibold text-slate-900">Office Email:</span> ${escapeHTML(item.officeEmail)}</p>
-      `;
-
-      const linkInput = document.getElementById('vcApproveWebexLinkInput');
-      const errEl = document.getElementById('err-vcApproveWebexLink');
-      if (linkInput) {
-        linkInput.value = (item.webexLink && item.webexLink.startsWith('http')) ? item.webexLink : '';
-      }
-      if (errEl) errEl.classList.add('hidden');
-
-      document.getElementById('vcApproveModal').classList.remove('hidden');
-      setTimeout(() => {
-        if (linkInput) linkInput.focus();
-      }, 60);
-    }
-
-    function closeVcApproveModal() {
-      const modal = document.getElementById('vcApproveModal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function confirmVcApprovalWithLink(event) {
-      event.preventDefault();
-      if (currentRole !== 'admin') return;
-
-      const vcId = document.getElementById('vcApproveTargetId').value;
-      const linkInput = document.getElementById('vcApproveWebexLinkInput');
-      const errEl = document.getElementById('err-vcApproveWebexLink');
-      const rawUrl = linkInput ? linkInput.value.trim() : '';
-
-      let isValidUrl = false;
-      try {
-        const parsed = new URL(rawUrl);
-        isValidUrl = parsed.protocol === 'http:' || parsed.protocol === 'https:';
-      } catch (e) {
-        isValidUrl = false;
-      }
-
-      if (!rawUrl || !isValidUrl) {
-        if (errEl) errEl.classList.remove('hidden');
-        return;
-      }
-      if (errEl) errEl.classList.add('hidden');
-
-      const vcList = getVcRequests();
-      const idx = vcList.findIndex((v) => v.id === vcId);
-      if (idx === -1) return;
-
-      vcList[idx].status = 'Scheduled / Approved';
-      vcList[idx].webexLink = rawUrl;
-      saveVcRequests(vcList);
-
-      pushToSharedDatabase('updateStatus', 'Video Conference', {
-        id: vcId,
-        status: vcList[idx].status,
-        webexLink: vcList[idx].webexLink
-      });
-
-      closeVcApproveModal();
-      renderVcRequestsList();
-      renderDashboard();
-      showToast(
-        `Series #${vcList[idx].seriesNumber} Approved`,
-        'Official Webex link saved and status updated to Scheduled / Approved.',
-        'success'
-      );
-    }
-
-    function cycleVcRequestStatus(vcId) {
-      if (currentRole !== 'admin') return;
-      const vcList = getVcRequests();
-      const idx = vcList.findIndex((v) => v.id === vcId);
-      if (idx === -1) return;
-
-      const currentStatus = vcList[idx].status;
-      if (currentStatus === 'Pending') {
-        openVcApproveModal(vcId);
-        return;
-      } else if (currentStatus === 'Scheduled / Approved') {
-        vcList[idx].status = 'Completed';
-      } else {
-        vcList[idx].status = 'Pending';
-        vcList[idx].webexLink = 'Awaiting Admin Webex Link';
-      }
-
-      saveVcRequests(vcList);
-      pushToSharedDatabase('updateStatus', 'Video Conference', {
-        id: vcId,
-        status: vcList[idx].status,
-        webexLink: vcList[idx].webexLink
-      });
-
-      renderVcRequestsList();
-      renderDashboard();
-      showToast(
-        `Series #${vcList[idx].seriesNumber} Updated`,
-        `Status changed to "${vcList[idx].status}".`,
-        'success'
-      );
-    }
-
-    // =========================================================================
-    // STARLINK BORROWER SUBMISSION
-    // =========================================================================
-
-    function resetStarlinkForm() {
-      const form = document.getElementById('starlinkForm');
-      if (form) form.reset();
-      const consent = document.getElementById('slPrivacyConsent');
-      if (consent) consent.checked = false;
       ['err-slPrivacyConsent', 'err-slBorrowerName', 'err-slEmail', 'err-slPosition', 'err-slProgramUnit', 'err-slResStartDate', 'err-slResEndDate', 'err-slDateBorrowed', 'err-slDateReturned', 'err-slActivityTitle', 'err-slActivityLocation'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.classList.add('hidden');
       });
-      refreshStarlinkSeriesNumberDisplay();
     }
 
     async function handleStarlinkFormSubmit(event) {
@@ -3103,259 +2311,78 @@
         return;
       }
 
-      await syncFromSharedDatabase(false);
-      let uniqueNum = getNextUniqueStarlinkSeriesNumber();
-      let slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
-
-      if (isStarlinkNumberDuplicate(slId)) {
-        uniqueNum = getNextUniqueStarlinkSeriesNumber();
-        slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Generating Reference Number...';
       }
 
-      const newSlRequest = {
-        id: slId,
-        seriesNumber: uniqueNum,
-        submittedAt: new Date().toISOString(),
-        email,
-        borrowerName,
-        position,
-        programUnit,
-        resStartDate,
-        resEndDate,
-        dateBorrowed,
-        dateReturned,
-        activityTitle,
-        activityLocation,
-        remarks,
-        status: 'Pending'
-      };
+      try {
+        await syncFromSharedDatabase(false);
+        let uniqueNum = getNextUniqueStarlinkSeriesNumber();
+        let slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
 
-      const slList = getStarlinkRequests();
-      slList.unshift(newSlRequest);
-      saveStarlinkRequests(slList);
-      safeSetStorage('local', STARLINK_SERIES_COUNTER_KEY, String(uniqueNum + 1));
-
-      pushToSharedDatabase('create', 'Starlink Borrower', newSlRequest);
-
-      lastSubmittedTicketId = newSlRequest.id;
-      lastSubmittedType = 'starlink';
-
-      document.getElementById('modalRefNumber').textContent = newSlRequest.id;
-      document.getElementById('modalSummaryDetails').innerHTML = `
-        <p><span class="font-semibold text-slate-800">Borrower:</span> ${escapeHTML(borrowerName)} (${escapeHTML(programUnit)})</p>
-        <p><span class="font-semibold text-slate-800">Activity:</span> ${escapeHTML(activityTitle)}</p>
-        <p><span class="font-semibold text-slate-800">Location:</span> ${escapeHTML(activityLocation)}</p>
-        <p><span class="font-semibold text-slate-800">Activity Dates:</span> ${escapeHTML(resStartDate)} to ${escapeHTML(resEndDate)}</p>
-        <p><span class="font-semibold text-slate-800">Borrowed / Return:</span> ${escapeHTML(dateBorrowed)} to ${escapeHTML(dateReturned)}</p>
-      `;
-
-      const primaryBtn = document.getElementById('modalPrimaryActionBtn');
-      if (primaryBtn) {
-        primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
-      }
-
-      document.getElementById('confirmationModal').classList.remove('hidden');
-      resetStarlinkForm();
-      updateTicketCountBadge();
-      if (currentRole === 'admin') {
-        renderDashboard();
-        renderStarlinkRequestsList();
-      }
-    }
-
-    function cycleStarlinkRequestStatus(slId) {
-      if (currentRole !== 'admin') return;
-      const slList = getStarlinkRequests();
-      const idx = slList.findIndex((s) => s.id === slId);
-      if (idx === -1) return;
-
-      const today = new Date().toISOString().split('T')[0];
-      if (slList[idx].status === 'Pending') {
-        slList[idx].status = 'Approved / Borrowed';
-        slList[idx].dateBorrowed = today;
-      } else if (slList[idx].status === 'Approved / Borrowed') {
-        slList[idx].status = 'Returned';
-        slList[idx].dateReturned = today;
-      } else {
-        slList[idx].status = 'Pending';
-        slList[idx].dateBorrowed = '';
-        slList[idx].dateReturned = '';
-      }
-
-      saveStarlinkRequests(slList);
-      pushToSharedDatabase('updateStatus', 'Starlink Borrower', {
-        id: slId,
-        status: slList[idx].status,
-        dateBorrowed: slList[idx].dateBorrowed,
-        dateReturned: slList[idx].dateReturned
-      });
-
-      renderStarlinkRequestsList();
-      renderDashboard();
-      showToast(`${slId} Updated`, `Starlink status set to "${slList[idx].status}".`, 'success');
-    }
-
-    // =========================================================================
-    // CONFIRMATION & IMAGE MODALS
-    // =========================================================================
-
-    function closeConfirmationModal() {
-      const modal = document.getElementById('confirmationModal');
-      if (modal) modal.classList.add('hidden');
-    }
-
-    function handleConfirmationPrimaryAction() {
-      closeConfirmationModal();
-      if (currentRole === 'admin') {
-        switchTab('tracker');
-        if (lastSubmittedType === 'vc') switchAdminRecordSubtab('vc');
-        else if (lastSubmittedType === 'starlink') switchAdminRecordSubtab('starlink');
-        else switchAdminRecordSubtab('tats');
-      } else {
-        switchTab('client-status');
-        const lookupInput = document.getElementById('clientStatusLookupInput');
-        if (lookupInput && lastSubmittedTicketId) {
-          lookupInput.value = lastSubmittedTicketId;
-          lookupClientRequestStatus(null);
+        while (isStarlinkNumberDuplicate(slId)) {
+          uniqueNum++;
+          slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
         }
-      }
-    }
 
-    function openImageModal(ticketId) {
-      const ticket = getTickets().find((t) => t.id === ticketId);
-      if (!ticket || !ticket.attachment || !ticket.attachment.dataUrl) {
-        showToast('No Image Data', 'No screenshot preview is stored for this ticket.', 'warning');
-        return;
-      }
-      document.getElementById('imageModalTitle').textContent = `${ticket.id} — ${ticket.attachment.name}`;
-      document.getElementById('modalFullImage').src = ticket.attachment.dataUrl;
-      document.getElementById('imageModalCaption').textContent = `Submitted by ${ticket.fullName} (${ticket.provinceFacility})`;
-      document.getElementById('imageModal').classList.remove('hidden');
-    }
+        const newSlRequest = {
+          id: slId,
+          seriesNumber: uniqueNum,
+          submittedAt: new Date().toISOString(),
+          email,
+          borrowerName,
+          position,
+          programUnit,
+          resStartDate,
+          resEndDate,
+          dateBorrowed,
+          dateReturned,
+          activityTitle,
+          activityLocation,
+          remarks,
+          status: 'Pending'
+        };
 
-    function closeImageModal() {
-      const modal = document.getElementById('imageModal');
-      if (modal) modal.classList.add('hidden');
-    }
+        const slList = getStarlinkRequests();
+        slList.unshift(newSlRequest);
+        saveStarlinkRequests(slList);
+        safeSetStorage('local', STARLINK_SERIES_COUNTER_KEY, String(uniqueNum + 1));
 
-    // =========================================================================
-    // CLIENT REQUEST STATUS TRACKER
-    // =========================================================================
+        pushToSharedDatabase('create', 'Starlink Borrower', newSlRequest);
 
-    function quickClientLookup(sampleQuery) {
-      const input = document.getElementById('clientStatusLookupInput');
-      if (input) {
-        input.value = sampleQuery;
-        lookupClientRequestStatus(null);
-      }
-    }
+        lastSubmittedTicketId = newSlRequest.id;
+        lastSubmittedType = 'starlink';
 
-    function lookupClientRequestStatus(event) {
-      if (event) event.preventDefault();
-      const input = document.getElementById('clientStatusLookupInput');
-      const container = document.getElementById('clientStatusResultContainer');
-      const rawInput = input ? input.value.trim() : '';
-      const query = rawInput.toLowerCase();
-
-      if (!query) {
-        showToast('Enter Reference ID', 'Type a TATS Ticket ID, VC Series #, Starlink ID, or Email.', 'warning');
-        return;
-      }
-
-      // Validate ticket/reference format when the user enters a structured ID prefix
-      const looksLikeStructuredRef = /^(tats|vc|sl)-/i.test(rawInput);
-      const isValidStructuredRef = /^(TATS-\d{4}-\d{4,}|VC-\d+|SL-\d{4}-\d{3,})$/i.test(rawInput);
-      if (looksLikeStructuredRef && !isValidStructuredRef) {
-        container.innerHTML = `
-          <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center text-xs text-amber-800 space-y-1">
-            <p class="font-bold">Invalid Reference Number Format</p>
-            <p>Please check your ticket number format (e.g., <span class="font-mono font-semibold">TATS-2026-1044</span>, <span class="font-mono font-semibold">VC-614</span>, or <span class="font-mono font-semibold">SL-2026-004</span>) or search using your email address.</p>
-          </div>
+        document.getElementById('modalRefNumber').textContent = newSlRequest.id;
+        document.getElementById('modalSummaryDetails').innerHTML = `
+          <p><span class="font-semibold text-slate-800">Generated Reference #:</span> <span class="font-mono font-bold text-indigo-700">${escapeHTML(newSlRequest.id)}</span></p>
+          <p><span class="font-semibold text-slate-800">Borrower:</span> ${escapeHTML(borrowerName)} (${escapeHTML(programUnit)})</p>
+          <p><span class="font-semibold text-slate-800">Activity:</span> ${escapeHTML(activityTitle)}</p>
+          <p><span class="font-semibold text-slate-800">Location:</span> ${escapeHTML(activityLocation)}</p>
+          <p><span class="font-semibold text-slate-800">Activity Dates:</span> ${escapeHTML(resStartDate)} to ${escapeHTML(resEndDate)}</p>
+          <p><span class="font-semibold text-slate-800">Borrowed / Return:</span> ${escapeHTML(dateBorrowed)} to ${escapeHTML(dateReturned)}</p>
         `;
-        return;
-      }
 
-      const matches = [];
-
-      getTickets().forEach((t) => {
-        if (
-          String(t.id).toLowerCase().includes(query) ||
-          String(t.email).toLowerCase().includes(query) ||
-          String(t.fullName).toLowerCase().includes(query)
-        ) {
-          const isSolved = String(t.solved).toUpperCase() === 'YES';
-          matches.push(`
-            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="font-mono text-xs font-bold text-teal-700 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-md">${escapeHTML(t.id)}</span>
-                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${isSolved ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                  ${isSolved ? 'Solved (YES)' : 'Unsolved (No)'}
-                </span>
-              </div>
-              <p class="text-sm font-bold text-slate-900">${escapeHTML(t.provinceFacility)} &bull; ${escapeHTML(t.infoSystem)}</p>
-              <p class="text-xs text-slate-600">Reported by ${escapeHTML(t.fullName)} on ${escapeHTML(formatTimestamp(t.submittedAt))}</p>
-            </div>
-          `);
+        const primaryBtn = document.getElementById('modalPrimaryActionBtn');
+        if (primaryBtn) {
+          primaryBtn.textContent = currentRole === 'admin' ? 'View in All Records' : 'Track Request Status';
         }
-      });
 
-      getVcRequests().forEach((v) => {
-        if (
-          String(v.id).toLowerCase().includes(query) ||
-          String(v.seriesNumber) === query ||
-          String(v.officeEmail).toLowerCase().includes(query) ||
-          String(v.title).toLowerCase().includes(query)
-        ) {
-          const hasUrl = v.webexLink && /^https?:\/\//i.test(v.webexLink);
-          const linkDisplay = hasUrl
-            ? `<a href="${escapeHTML(v.webexLink)}" target="_blank" rel="noopener noreferrer" class="font-mono text-blue-600 underline break-all">${escapeHTML(v.webexLink)}</a>`
-            : `<span class="font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Webex Link')}</span>`;
-
-          matches.push(`
-            <div class="bg-blue-50/40 border border-blue-200 rounded-xl p-4 space-y-1.5">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="font-mono text-xs font-bold text-blue-700 bg-blue-100 px-2.5 py-0.5 rounded-md">Series #${escapeHTML(v.seriesNumber)} (${escapeHTML(v.id)})</span>
-                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${v.status === 'Pending' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
-                  ${escapeHTML(v.status)}
-                </span>
-              </div>
-              <p class="text-sm font-bold text-slate-900">${escapeHTML(v.title)}</p>
-              <p class="text-xs text-slate-600">Schedule: ${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s)</p>
-              <p class="text-xs text-slate-700"><span class="font-semibold">Webex Link:</span> ${linkDisplay}</p>
-            </div>
-          `);
+        document.getElementById('confirmationModal').classList.remove('hidden');
+        resetStarlinkForm();
+        updateTicketCountBadge();
+        if (currentRole === 'admin') {
+          renderDashboard();
+          renderStarlinkRequestsList();
         }
-      });
-
-      getStarlinkRequests().forEach((s) => {
-        if (
-          String(s.id).toLowerCase().includes(query) ||
-          String(s.email).toLowerCase().includes(query) ||
-          String(s.borrowerName).toLowerCase().includes(query)
-        ) {
-          matches.push(`
-            <div class="bg-indigo-50/40 border border-indigo-200 rounded-xl p-4 space-y-1.5">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <span class="font-mono text-xs font-bold text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-md">${escapeHTML(s.id)}</span>
-                <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${s.status === 'Returned' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                  ${escapeHTML(s.status)}
-                </span>
-              </div>
-              <p class="text-sm font-bold text-slate-900">${escapeHTML(s.activityTitle)} (${escapeHTML(s.activityLocation)})</p>
-              <p class="text-xs text-slate-600">Borrower: ${escapeHTML(s.borrowerName)} &bull; Dates: ${escapeHTML(s.resStartDate)} to ${escapeHTML(s.resEndDate)}</p>
-            </div>
-          `);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnHtml;
         }
-      });
-
-      if (matches.length === 0) {
-        container.innerHTML = `
-          <div class="bg-rose-50 border border-rose-200 rounded-xl p-5 text-center text-xs text-rose-700 font-medium">
-            No matching TATS Ticket, Video Conference, or Starlink request found for "<strong>${escapeHTML(input.value)}</strong>".
-          </div>
-        `;
-      } else {
-        container.innerHTML = `<div class="space-y-3">${matches.join('')}</div>`;
       }
     }
 
