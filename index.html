@@ -1688,7 +1688,7 @@
           </div>
           <div>
             <h3 class="text-lg font-bold text-slate-900">Approve Video Conference Request</h3>
-            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the official Webex meeting URL before approving</p>
+            <p id="vcApproveSubtitle" class="text-xs text-slate-500">Paste the Webex meeting details &amp; invitation before approving</p>
           </div>
         </div>
         <button type="button" onclick="closeVcApproveModal()" class="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg">
@@ -1704,17 +1704,17 @@
         <input type="hidden" id="vcApproveTargetId" value="" />
         <div>
           <label for="vcApproveWebexLinkInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1.5">
-            Official Webex Meeting Link <span class="text-rose-600">*</span>
+            Webex Meeting Details / Invitation <span class="text-rose-600">*</span>
           </label>
-          <input
-            type="url"
+          <textarea
             id="vcApproveWebexLinkInput"
+            rows="6"
             required
-            placeholder="https://doh.webex.com/doh/j.php?MTID=..."
-            class="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-mono text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-          />
+            placeholder="Paste complete Webex meeting invitation details here (Meeting link, Meeting number, Password, Host key, etc.)..."
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 text-xs font-mono text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          ></textarea>
           <p id="err-vcApproveWebexLink" class="hidden text-xs font-medium text-rose-600 mt-1.5">
-            Please paste a valid Webex meeting URL (must start with https:// or http://).
+            Please paste the Webex meeting details before approving.
           </p>
         </div>
 
@@ -1730,7 +1730,7 @@
             type="submit"
             class="flex-1 px-4 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-sm transition-colors"
           >
-            Save Link &amp; Approve
+            Save Details &amp; Approve
           </button>
         </div>
       </form>
@@ -2751,7 +2751,7 @@
           <p><span class="font-semibold text-slate-800">Meeting Title:</span> ${escapeHTML(title)}</p>
           <p><span class="font-semibold text-slate-800">Schedule:</span> ${escapeHTML(dateOfMeeting)} at ${escapeHTML(timeOfMeeting)} (${escapeHTML(lengthHours)} hr/s)</p>
           <p><span class="font-semibold text-slate-800">Division / Unit:</span> ${escapeHTML(divisionOffice)}</p>
-          <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold text-amber-700">Pending (Webex Link Pending Admin Review)</span></p>
+          <p><span class="font-semibold text-slate-800">Status:</span> <span class="font-semibold text-amber-700">Pending (Meeting Details Pending Admin Review)</span></p>
         `;
 
         const primaryBtn = document.getElementById('modalPrimaryActionBtn');
@@ -2938,7 +2938,9 @@
       }
 
       const fileName = (ticket.attachment && ticket.attachment.name) || ticket.attachmentName || 'Attachment';
-      const isPdf = String(dataUrl).startsWith('data:application/pdf') || String(fileName).toLowerCase().endsWith('.pdf');
+      const isPdf = String(dataUrl).startsWith('data:application/pdf') ||
+        String(dataUrl).includes('/preview') ||
+        String(fileName).toLowerCase().endsWith('.pdf');
       const imgEl = document.getElementById('modalFullImage');
       const pdfEl = document.getElementById('modalFullPdf');
       const dlBtn = document.getElementById('modalDownloadAttachmentBtn');
@@ -2960,6 +2962,8 @@
 
       if (dlBtn) {
         dlBtn.href = dataUrl;
+        dlBtn.target = '_blank';
+        dlBtn.rel = 'noopener noreferrer';
         dlBtn.download = fileName;
         dlBtn.classList.remove('hidden');
       }
@@ -2985,7 +2989,10 @@
         <p><span class="font-semibold">Division / Office:</span> ${escapeHTML(vc.divisionOffice)} (${escapeHTML(vc.officeEmail)})</p>
       `;
       const linkInput = document.getElementById('vcApproveWebexLinkInput');
-      linkInput.value = (vc.webexLink && /^https?:\/\//i.test(vc.webexLink)) ? vc.webexLink : '';
+      const existingDetails = vc.webexLink && vc.webexLink !== 'Awaiting Admin Webex Link' && vc.webexLink !== 'Awaiting Admin Meeting Details'
+        ? vc.webexLink
+        : '';
+      linkInput.value = existingDetails;
       document.getElementById('err-vcApproveWebexLink').classList.add('hidden');
       document.getElementById('vcApproveModal').classList.remove('hidden');
     }
@@ -2998,10 +3005,10 @@
     function confirmVcApprovalWithLink(event) {
       event.preventDefault();
       const targetId = document.getElementById('vcApproveTargetId').value;
-      const linkVal = document.getElementById('vcApproveWebexLinkInput').value.trim();
+      const detailsVal = document.getElementById('vcApproveWebexLinkInput').value.trim();
       const errEl = document.getElementById('err-vcApproveWebexLink');
 
-      if (!linkVal || !/^https?:\/\/.+/i.test(linkVal)) {
+      if (!detailsVal) {
         if (errEl) errEl.classList.remove('hidden');
         return;
       }
@@ -3011,7 +3018,7 @@
       const idx = vcList.findIndex((v) => v.id === targetId);
       if (idx === -1) return;
 
-      vcList[idx].webexLink = linkVal;
+      vcList[idx].webexLink = detailsVal;
       vcList[idx].status = 'Scheduled / Approved';
       saveVcRequests(vcList);
 
@@ -3024,7 +3031,26 @@
       closeVcApproveModal();
       renderVcRequestsList();
       renderDashboard();
-      showToast('Video Conference Approved', `Saved Webex link for ${targetId}.`, 'success');
+      showToast('Video Conference Approved', `Saved Webex meeting details for ${targetId}.`, 'success');
+    }
+
+    function copyVcMeetingDetails(vcId) {
+      const vc = getVcRequests().find((v) => v.id === vcId);
+      if (!vc || !vc.webexLink) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(vc.webexLink).then(() => {
+          showToast('Copied to Clipboard', `Meeting details for ${vc.id} copied.`, 'success');
+        }).catch(() => {
+          showToast('Copy Failed', 'Please select and copy the meeting details manually.', 'warning');
+        });
+      } else {
+        showToast('Copy Unavailable', 'Please select and copy the meeting details manually.', 'warning');
+      }
+    }
+
+    function formatMeetingDetailsHtml(rawText) {
+      const escaped = escapeHTML(rawText || '');
+      return escaped.replace(/(https?:\/\/[^\s<]+)/gi, '<a href="$1" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-semibold underline break-all">$1</a>');
     }
 
     function cycleVcRequestStatus(vcId) {
@@ -3036,7 +3062,7 @@
         vcList[idx].status = 'Completed';
       } else {
         vcList[idx].status = 'Pending';
-        vcList[idx].webexLink = 'Awaiting Admin Webex Link';
+        vcList[idx].webexLink = 'Awaiting Admin Meeting Details';
       }
       saveVcRequests(vcList);
 
@@ -3146,7 +3172,9 @@
       });
 
       matchedVc.forEach((v) => {
-        const hasUrl = v.webexLink && /^https?:\/\//i.test(v.webexLink);
+        const hasDetails = v.webexLink &&
+          v.webexLink !== 'Awaiting Admin Webex Link' &&
+          v.webexLink !== 'Awaiting Admin Meeting Details';
         cards.push(`
           <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
             <div class="flex flex-wrap items-center justify-between gap-2">
@@ -3158,10 +3186,21 @@
             <h3 class="text-base font-bold text-slate-900 mt-3">${escapeHTML(v.title)}</h3>
             <p class="text-xs text-slate-500 mt-0.5">${escapeHTML(v.dateOfMeeting)} at ${escapeHTML(v.timeOfMeeting)} (${escapeHTML(v.lengthHours)} hr/s) &bull; ${escapeHTML(v.divisionOffice)}</p>
             <div class="mt-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-              <span class="font-semibold text-slate-800">Webex Meeting Link:</span>
-              ${hasUrl
-                ? `<a href="${escapeHTML(v.webexLink)}" target="_blank" rel="noopener noreferrer" class="block mt-1 font-mono text-blue-600 font-semibold underline break-all">${escapeHTML(v.webexLink)}</a>`
-                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Webex Link')}</span>`
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="font-semibold text-slate-800">Webex Meeting Details:</span>
+                ${hasDetails ? `
+                  <button
+                    type="button"
+                    onclick="copyVcMeetingDetails('${escapeHTML(v.id)}')"
+                    class="px-2.5 py-1 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-lg transition-colors"
+                  >
+                    Copy Details
+                  </button>
+                ` : ''}
+              </div>
+              ${hasDetails
+                ? `<div class="mt-1 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(v.webexLink)}</div>`
+                : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(v.webexLink || 'Awaiting Admin Meeting Details')}</span>`
               }
             </div>
           </div>
@@ -3264,7 +3303,9 @@
         const dataUrl = (t.attachment && t.attachment.dataUrl) || t.attachmentData || '';
         const fileNameLabel = (t.attachment && t.attachment.name) || (t.attachmentName && t.attachmentName !== 'None' ? t.attachmentName : '');
         const hasAttachment = Boolean(dataUrl || fileNameLabel);
-        const isPdf = String(dataUrl).startsWith('data:application/pdf') || String(fileNameLabel).toLowerCase().endsWith('.pdf');
+        const isPdf = String(dataUrl).startsWith('data:application/pdf') ||
+          String(dataUrl).includes('/preview') ||
+          String(fileNameLabel).toLowerCase().endsWith('.pdf');
         const isImagePreviewable = Boolean(dataUrl && !isPdf);
 
         return `
@@ -3388,7 +3429,9 @@
       container.innerHTML = filtered.map((item) => {
         const isPending = item.status === 'Pending';
         const isApproved = item.status === 'Scheduled / Approved';
-        const hasUrl = item.webexLink && /^https?:\/\//i.test(item.webexLink);
+        const hasDetails = item.webexLink &&
+          item.webexLink !== 'Awaiting Admin Webex Link' &&
+          item.webexLink !== 'Awaiting Admin Meeting Details';
         const statusBadge = isPending
           ? 'bg-amber-100 text-amber-800 border-amber-200'
           : (isApproved ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-emerald-100 text-emerald-800 border-emerald-200');
@@ -3424,7 +3467,7 @@
                   onclick="openVcApproveModal('${escapeHTML(item.id)}')"
                   class="px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition-colors"
                 >
-                  ${hasUrl ? 'Edit Webex Link' : 'Paste Webex Link & Approve'}
+                  ${hasDetails ? 'Edit Meeting Details' : 'Paste Meeting Details & Approve'}
                 </button>
                 ${!isPending ? `
                   <button
@@ -3438,8 +3481,25 @@
               </div>
             </div>
 
-            <div class="mt-3.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-1">
-              <p><span class="font-semibold text-slate-800">Webex Link:</span> ${hasUrl ? `<a href="${escapeHTML(item.webexLink)}" target="_blank" rel="noopener noreferrer" class="font-mono text-blue-600 underline break-all">${escapeHTML(item.webexLink)}</a>` : `<span class="font-mono text-amber-700">${escapeHTML(item.webexLink || 'Awaiting Admin Webex Link')}</span>`}</p>
+            <div class="mt-3.5 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-2">
+              <div>
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-semibold text-slate-800">Webex Meeting Details:</span>
+                  ${hasDetails ? `
+                    <button
+                      type="button"
+                      onclick="copyVcMeetingDetails('${escapeHTML(item.id)}')"
+                      class="px-2.5 py-0.5 text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-md transition-colors"
+                    >
+                      Copy Details
+                    </button>
+                  ` : ''}
+                </div>
+                ${hasDetails
+                  ? `<div class="mt-1.5 font-mono text-xs text-slate-800 whitespace-pre-wrap break-words bg-white p-3 rounded-lg border border-slate-200">${formatMeetingDetailsHtml(item.webexLink)}</div>`
+                  : `<span class="block mt-1 font-mono text-amber-700">${escapeHTML(item.webexLink || 'Awaiting Admin Meeting Details')}</span>`
+                }
+              </div>
               <p><span class="font-semibold text-slate-800">Recording:</span> ${escapeHTML(item.recordingSendTo || 'Not Requested')} &bull; <span class="font-semibold text-slate-800">Unlocking:</span> ${escapeHTML(item.unlockingOption || 'Standard')}</p>
               ${item.remarks ? `<p><span class="font-semibold text-slate-800">Remarks:</span> ${escapeHTML(item.remarks)}</p>` : ''}
             </div>
