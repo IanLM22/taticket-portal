@@ -223,9 +223,12 @@
             <h2 class="text-lg sm:text-xl font-bold">Submit Technical Assistance Ticket (TATS)</h2>
             <p class="text-xs text-teal-100 mt-0.5">Report health information system issues, errors, or remote support requests</p>
           </div>
-          <span id="tatsNextTicketBadge" class="self-start sm:self-center font-mono text-xs font-bold bg-white/15 border border-white/25 px-3 py-1.5 rounded-lg">
-            Next ID: TATS-2026-1044
-          </span>
+          <div class="flex flex-col sm:items-end gap-1">
+            <span id="tatsNextTicketBadge" class="self-start sm:self-end font-mono text-xs font-bold bg-white/15 border border-white/25 px-3 py-1.5 rounded-lg">
+              Next ID: TATS-2026-1044
+            </span>
+            <input type="hidden" id="tatsTicketNumber" value="1044" />
+          </div>
         </div>
 
         <form id="tatsForm" onsubmit="handleTatsFormSubmit(event)" novalidate class="p-6 sm:p-8 space-y-5">
@@ -1365,46 +1368,67 @@
     // DATA ACCESSORS
     // =========================================================================
 
+    function deduplicateRecordsById(list, prefix) {
+      if (!Array.isArray(list)) return [];
+      const seenIds = new Set();
+      const seenSeries = new Set();
+      return list.filter((item) => {
+        if (!item) return false;
+        const rawId = item.id ? String(item.id).trim().toUpperCase() : '';
+        const numMatch = rawId.match(/(\d+)$/);
+        const seriesNum = item.seriesNumber !== undefined && item.seriesNumber !== null && item.seriesNumber !== ''
+          ? parseInt(String(item.seriesNumber).replace(/\D/g, ''), 10)
+          : (numMatch ? parseInt(numMatch[1], 10) : NaN);
+
+        if (rawId && seenIds.has(rawId)) return false;
+        if (!isNaN(seriesNum) && seenSeries.has(seriesNum)) return false;
+
+        if (rawId) seenIds.add(rawId);
+        if (!isNaN(seriesNum)) seenSeries.add(seriesNum);
+        return true;
+      });
+    }
+
     function getTickets() {
       try {
         const raw = safeGetStorage('local', STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        return deduplicateRecordsById(parsed, 'TATS');
       } catch (e) {
         return [];
       }
     }
 
     function saveTickets(list) {
-      safeSetStorage('local', STORAGE_KEY, JSON.stringify(list || []));
+      safeSetStorage('local', STORAGE_KEY, JSON.stringify(deduplicateRecordsById(list, 'TATS')));
     }
 
     function getVcRequests() {
       try {
         const raw = safeGetStorage('local', VC_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        return deduplicateRecordsById(parsed, 'VC');
       } catch (e) {
         return [];
       }
     }
 
     function saveVcRequests(list) {
-      safeSetStorage('local', VC_STORAGE_KEY, JSON.stringify(list || []));
+      safeSetStorage('local', VC_STORAGE_KEY, JSON.stringify(deduplicateRecordsById(list, 'VC')));
     }
 
     function getStarlinkRequests() {
       try {
         const raw = safeGetStorage('local', STARLINK_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        return deduplicateRecordsById(parsed, 'SL');
       } catch (e) {
         return [];
       }
     }
 
     function saveStarlinkRequests(list) {
-      safeSetStorage('local', STARLINK_STORAGE_KEY, JSON.stringify(list || []));
+      safeSetStorage('local', STARLINK_STORAGE_KEY, JSON.stringify(deduplicateRecordsById(list, 'SL')));
     }
 
     // =========================================================================
@@ -1777,12 +1801,47 @@
       return candidate;
     }
 
+    function validateAndResolveUniqueTatsNumber(candidateNum) {
+      const usedSet = getUsedTatsSeriesSet();
+      const existingIds = new Set(getTickets().map((t) => String(t.id).trim().toUpperCase()));
+      let parsedNum = parseInt(String(candidateNum).replace(/\D/g, ''), 10);
+
+      if (isNaN(parsedNum) || parsedNum < INITIAL_TATS_SERIES || usedSet.has(parsedNum) || existingIds.has(`TATS-2026-${parsedNum}`)) {
+        parsedNum = getNextUniqueTatsSeriesNumber();
+      }
+
+      while (usedSet.has(parsedNum) || existingIds.has(`TATS-2026-${parsedNum}`)) {
+        parsedNum++;
+      }
+
+      return {
+        seriesNumber: parsedNum,
+        ticketId: `TATS-2026-${parsedNum}`
+      };
+    }
+
     function refreshTatsTicketNumberDisplay() {
-      const nextNum = getNextUniqueTatsSeriesNumber();
+      const validated = validateAndResolveUniqueTatsNumber(getNextUniqueTatsSeriesNumber());
       const badgeEl = document.getElementById('tatsNextTicketBadge');
       if (badgeEl) {
-        badgeEl.textContent = `Next ID: TATS-2026-${nextNum}`;
+        badgeEl.textContent = `Next ID: ${validated.ticketId}`;
       }
+      const hiddenEl = document.getElementById('tatsTicketNumber');
+      if (hiddenEl) {
+        hiddenEl.value = String(validated.seriesNumber);
+      }
+    }
+
+    function isTatsTicketNumberDuplicate(ticketNumOrId) {
+      const normalized = String(ticketNumOrId).trim().toUpperCase();
+      const numPart = parseInt(normalized.replace(/\D/g, ''), 10);
+      const usedSet = getUsedTatsSeriesSet();
+      if (!isNaN(numPart) && usedSet.has(numPart)) return true;
+      return getTickets().some((t) => String(t.id).trim().toUpperCase() === normalized);
+    }
+
+    function isValidTatsTicketFormat(ticketId) {
+      return /^TATS-\d{4}-\d{4,}$/i.test(String(ticketId).trim());
     }
 
     function getUsedStarlinkSeriesSet() {
@@ -1812,6 +1871,14 @@
         candidate++;
       }
       return candidate;
+    }
+
+    function isStarlinkNumberDuplicate(slNumOrId) {
+      const normalized = String(slNumOrId).trim().toUpperCase();
+      const numPart = parseInt(normalized.replace(/\D/g, ''), 10);
+      const usedSet = getUsedStarlinkSeriesSet();
+      if (!isNaN(numPart) && usedSet.has(numPart)) return true;
+      return getStarlinkRequests().some((s) => String(s.id).trim().toUpperCase() === normalized);
     }
 
     function refreshStarlinkSeriesNumberDisplay() {
@@ -1916,9 +1983,27 @@
         return;
       }
 
+      // Sync with shared database first to validate and prevent multi-user ticket number collisions
       await syncFromSharedDatabase(false);
-      const uniqueNum = getNextUniqueTatsSeriesNumber();
-      const ticketId = `TATS-2026-${uniqueNum}`;
+
+      const proposedInput = document.getElementById('tatsTicketNumber');
+      const rawProposedNum = proposedInput ? parseInt(proposedInput.value, 10) : getNextUniqueTatsSeriesNumber();
+      const proposedId = `TATS-2026-${rawProposedNum}`;
+
+      const validated = validateAndResolveUniqueTatsNumber(rawProposedNum);
+      let uniqueNum = validated.seriesNumber;
+      let ticketId = validated.ticketId;
+
+      if (isNaN(rawProposedNum) || !isValidTatsTicketFormat(proposedId) || proposedId !== ticketId) {
+        refreshTatsTicketNumberDisplay();
+        if (!isNaN(rawProposedNum) && proposedId !== ticketId) {
+          showToast(
+            'Ticket Number Validated',
+            `${proposedId} was already in use. Assigned unique ${ticketId} to prevent duplication.`,
+            'warning'
+          );
+        }
+      }
 
       const newTicket = {
         id: ticketId,
@@ -1935,9 +2020,15 @@
       };
 
       const tickets = getTickets();
+      if (isTatsTicketNumberDuplicate(ticketId)) {
+        const revalidated = validateAndResolveUniqueTatsNumber(uniqueNum + 1);
+        newTicket.seriesNumber = revalidated.seriesNumber;
+        newTicket.id = revalidated.ticketId;
+      }
+
       tickets.unshift(newTicket);
       saveTickets(tickets);
-      safeSetStorage('local', TATS_SERIES_COUNTER_KEY, String(uniqueNum + 1));
+      safeSetStorage('local', TATS_SERIES_COUNTER_KEY, String(newTicket.seriesNumber + 1));
 
       pushToSharedDatabase('create', 'TATS Tickets', {
         ...newTicket,
@@ -2300,8 +2391,13 @@
       }
 
       await syncFromSharedDatabase(false);
-      const uniqueNum = getNextUniqueStarlinkSeriesNumber();
-      const slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
+      let uniqueNum = getNextUniqueStarlinkSeriesNumber();
+      let slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
+
+      if (isStarlinkNumberDuplicate(slId)) {
+        uniqueNum = getNextUniqueStarlinkSeriesNumber();
+        slId = `SL-2026-${String(uniqueNum).padStart(3, '0')}`;
+      }
 
       const newSlRequest = {
         id: slId,
@@ -2436,10 +2532,24 @@
       if (event) event.preventDefault();
       const input = document.getElementById('clientStatusLookupInput');
       const container = document.getElementById('clientStatusResultContainer');
-      const query = input ? input.value.trim().toLowerCase() : '';
+      const rawInput = input ? input.value.trim() : '';
+      const query = rawInput.toLowerCase();
 
       if (!query) {
         showToast('Enter Reference ID', 'Type a TATS Ticket ID, VC Series #, Starlink ID, or Email.', 'warning');
+        return;
+      }
+
+      // Validate ticket/reference format when the user enters a structured ID prefix
+      const looksLikeStructuredRef = /^(tats|vc|sl)-/i.test(rawInput);
+      const isValidStructuredRef = /^(TATS-\d{4}-\d{4,}|VC-\d+|SL-\d{4}-\d{3,})$/i.test(rawInput);
+      if (looksLikeStructuredRef && !isValidStructuredRef) {
+        container.innerHTML = `
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-center text-xs text-amber-800 space-y-1">
+            <p class="font-bold">Invalid Reference Number Format</p>
+            <p>Please check your ticket number format (e.g., <span class="font-mono font-semibold">TATS-2026-1044</span>, <span class="font-mono font-semibold">VC-614</span>, or <span class="font-mono font-semibold">SL-2026-004</span>) or search using your email address.</p>
+          </div>
+        `;
         return;
       }
 
